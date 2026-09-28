@@ -416,3 +416,9 @@ html[lang="en"] :is(h1,h2,h3,p,.btn,.chip,.tb,.feel,.qprompt,.litem,.hint,.insig
 .lib .empty{color:var(--muted);font-size:14px;border-top:0}
 kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
 @media (prefers-reduced-motion:reduce){.dot,.bar i,.toast{transition:none}}
+/* live counter under the odd-meter grid */
+.oddlive{display:flex;align-items:baseline;gap:12px;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.oddlive b{font-size:34px;line-height:1;min-width:1.2em;text-align:center;color:var(--muted)}
+.oddlive b.on{color:var(--lantern)}
+.oddlive span{font-size:20px;font-weight:700}
+.oddlive small{color:var(--muted)}

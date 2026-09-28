@@ -10,13 +10,14 @@ function barT(){return S.ts.n*384/S.ts.d;}
 var METERS=[['4/4','4/4'],['3/4','3/4'],['6/8','6/8 (3+3)','3+3'],['12/8','12/8 (3+3+3+3)','3+3+3+3'],['5/4','5/4 (3+2)','3+2'],['7/4','7/4 (4+3)','4+3'],
  ['5/8','5/8 (2+3)','2+3'],['5/8','5/8 (3+2)','3+2'],['7/8','7/8 (2+2+3)','2+2+3'],['7/8','7/8 (3+2+2)','3+2+2'],['7/8','7/8 (2+3+2)','2+3+2'],
  ['9/8','9/8 (2+2+2+3)','2+2+2+3'],['9/8','9/8 (3+3+3)','3+3+3'],['9/8','9/8 (3+2+2+2)','3+2+2+2'],['11/8','11/8 (3+3+3+2)','3+3+3+2'],['11/8','11/8 (2+2+3+2+2)','2+2+3+2+2'],
- ['13/8','13/8 (3+3+3+2+2)','3+3+3+2+2'],['13/8','13/8 (2+2+2+3+2+2)','2+2+2+3+2+2'],['15/8','15/8 (3+3+3+3+3)','3+3+3+3+3'],['15/8','15/8 (2+2+2+3+2+2+2)','2+2+2+3+2+2+2']];
+ ['13/8','13/8 (3+3+3+2+2)','3+3+3+2+2'],['13/8','13/8 (2+2+2+3+2+2)','2+2+2+3+2+2'],['15/8','15/8 (3+3+3+3+3)','3+3+3+3+3'],['15/8','15/8 (2+2+2+3+2+2+2)','2+2+2+3+2+2+2'],
+ ['7/16','7/16 (3+2+2)','3+2+2'],['13/16','13/16 (4+4+5)','4+4+5'],['16/16','16/16 (3+3+3+3+4)','3+3+3+3+4']];
 function tsKey(ts){return ts.n+'/'+ts.d+(ts.g?':'+ts.g.join('+'):'');}
-function unitT(){return S.ts.d===8?48:96;}
-function groupsT(){var u=unitT(),g=S.ts.g||(S.ts.d===8?(S.ts.n%3===0?Array(S.ts.n/3).fill(3):[S.ts.n]):Array(S.ts.n).fill(1)),a=[0],t=0;g.forEach(function(x){t+=x*u;a.push(t);});return a;}
+function unitT(){return 384/S.ts.d;}
+function groupsT(){var u=unitT(),g=S.ts.g||(S.ts.d>=8?(S.ts.n%3===0?Array(S.ts.n/3).fill(3):[S.ts.n]):Array(S.ts.n).fill(1)),a=[0],t=0;g.forEach(function(x){t+=x*u;a.push(t);});return a;}
 function grpIdx(tick){var bt=barT(),r=((tick%bt)+bt)%bt,a=groupsT();for(var i=a.length-2;i>=0;i--)if(r>=a[i]-1e-6)return Math.floor(tick/bt)*100+i;return 0;}
 function beatT(){return unitT();}
-function beamG(){return S.ts.d===8?144:96;}
+function beamG(){return S.ts.d===16?96:S.ts.d===8?144:96;}
 function T(e,k){return !!(e&&e.t&&e.t[k]);}
 function blankEv(d,dot,tri,notes){return {d:d,dot:!!dot,tri:!!tri,rest:!notes||!notes.length,notes:notes||[],t:{},lg:'',sin:'',sout:'',bend:2,bt:'',harm:''};}
 function newEv(notes){return blankEv(S.nd.d,S.nd.dot,S.nd.tri,notes);}
