@@ -1,7 +1,7 @@
 /* اتصال دکمه‌ها و میان‌برهای صفحه‌کلید ویرایشگر */
 $('play').onclick=function(){playing?stop():start(false);};
 $('loop').onclick=function(){S.loop=!S.loop;this.setAttribute('aria-pressed',S.loop);};
-$('bpm').onchange=$('bpm').oninput=function(){var v=+this.value;if(!(v>=30&&v<=300))return;S.bpm=v;$('bpmv').textContent=S.bpm;save();};
+$('bpm').onchange=$('bpm').oninput=function(){var v=+this.value;if(!(v>=BPMMIN&&v<=BPMMAX)){if(this.value!==''&&arguments[0]&&arguments[0].type==='change'){v=bpmClamp(v);this.value=v;}else return;}S.bpm=v;$('bpmv').textContent=S.bpm;save();};
 $('tone').onchange=function(){S.tone=this.value;setTone();save();};
 $('copy').onclick=copyTab;$('gpx').onclick=gpExport;
 $('wipe').onclick=function(){if(!hasRiff()){toast('ریف از قبل خالیه');return;}doClean({riff:true});};
@@ -41,7 +41,7 @@ document.addEventListener('keydown',function(e){
     if(e.shiftKey&&n){var a=S.sel?S.sel.anchor:Math.min(S.cur,n-1),j=Math.min(ni,n-1);S.sel={a:Math.min(a,j),b:Math.max(a,j),anchor:a};}else S.sel=null;
     S.cur=ni;changed(true);}
   else if(k==='ArrowUp'){e.preventDefault();S.cs=Math.max(0,S.cs-1);changed(true);}
-  else if(k==='ArrowDown'){e.preventDefault();S.cs=Math.min(5,S.cs+1);changed(true);}
+  else if(k==='ArrowDown'){e.preventDefault();S.cs=Math.min(LOW,S.cs+1);changed(true);}
   else if(k>='0'&&k<='9'){e.preventDefault();typeFret(+k);}
   else if(k==='Delete'||k==='Backspace'){e.preventDefault();if(e.shiftKey||S.sel)delSel();else delNote();}
   else if(k==='Insert'){e.preventDefault();insEv();}

@@ -55,7 +55,7 @@ var VCACHE={};
 function solveVoicings(rootPc,t,style,bassRel){
   var ck=rootPc+'|'+t.id+'|'+style+'|'+(bassRel===undefined?'r':bassRel);var bassPc=bassRel===undefined?rootPc:(rootPc+bassRel)%12;if(VCACHE[ck])return VCACHE[ck];
   var rel=t.tones.map(function(x){return x[0]%12;}),allow={};rel.forEach(function(r){allow[(rootPc+r)%12]=1;});
-  var req=(t.req||rel).map(function(r){return (rootPc+r)%12;}),nmin=Math.max(t.tones.length<=3?t.tones.length:3,req.length),nmax=6,rootBass=true,adj=false,maxGap=1,spanMax=t.lv>=3?4:3,fixN=0,check=null;
+  var req=(t.req||rel).map(function(r){return (rootPc+r)%12;}),nmin=Math.max(t.tones.length<=3?t.tones.length:3,req.length),nmax=6,VS=Math.min(NS,6),rootBass=true,adj=false,maxGap=1,spanMax=t.lv>=3?4:3,fixN=0,check=null;
   var q=[];rel.forEach(function(r){if(q.indexOf(r)<0)q.push(r);});
   if(style==='shell'){var th=rel[1],sv=rel[3];var set=t.id==='m7b5'?[0,6,10]:[0,th,sv];allow={};set.forEach(function(r){allow[(rootPc+r)%12]=1;});req=set.map(function(r){return (rootPc+r)%12;});fixN=3;}
   else if(style==='drop2'||style==='drop3'){req=q.map(function(r){return (rootPc+r)%12;});fixN=4;adj=style==='drop2';rootBass=false;
@@ -69,16 +69,16 @@ function solveVoicings(rootPc,t,style,bassRel){
   if(fixN){nmin=nmax=fixN;}
   var found={},list=[];
   for(var w=0;w<=21;w++){
-    var cands=[];for(var s0=0;s0<6;s0++){var c=[null];if(w<=4&&allow[OPEN[s0]%12])c.push(0);
+    var cands=[];for(var s0=0;s0<VS;s0++){var c=[null];if(w<=4&&allow[OPEN[s0]%12])c.push(0);
       for(var f=Math.max(1,w);f<=Math.min(NF,w+spanMax);f++)if(allow[(OPEN[s0]+f)%12])c.push(f);cands.push(c);}
-    var pick=[null,null,null,null,null,null];
+    var pick=[];for(var p0=0;p0<VS;p0++)pick.push(null);
     (function rec(si){
       if(si<0){evalV();return;}
       for(var k=0;k<cands[si].length;k++){pick[si]=cands[si][k];rec(si-1);}
-    })(5);
+    })(VS-1);
   }
   function evalV(){
-    var notes=[];for(var s1=5;s1>=0;s1--)if(pick[s1]!==null)notes.push({s:s1,f:pick[s1]});
+    var notes=[];for(var s1=VS-1;s1>=0;s1--)if(pick[s1]!==null)notes.push({s:s1,f:pick[s1]});
     if(notes.length<nmin||notes.length>nmax)return;
     var fr=notes.filter(function(n){return n.f>0;}).map(function(n){return n.f;});
     var mn=fr.length?Math.min.apply(null,fr):0,mx=fr.length?Math.max.apply(null,fr):0,span=fr.length?mx-mn:0;

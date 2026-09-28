@@ -2,7 +2,7 @@
 
 function $(id){return document.getElementById(id);}
 
-var S={key:1,mode:'aeo',events:[],cur:0,cs:5,sel:null,ts:{n:4,d:4},speed:100,metro:false,countin:false,nd:{d:'8',dot:false,tri:false},chord:false,bpm:140,tone:'drive',loop:true,snap:false,deg:false,listen:false,lens:null};
+var S={key:1,mode:'aeo',events:[],cur:0,cs:LOW,sel:null,ts:{n:4,d:4},speed:100,metro:false,countin:false,nd:{d:'8',dot:false,tri:false},chord:false,bpm:140,tone:'drive',loop:true,snap:false,deg:false,listen:false,lens:null};
 function emptySteps(n){var a=[];for(var i=0;i<n;i++)a.push(null);return a;}
 
 function spell(ivs){return spellAny(S.key,ivs).notes;}
@@ -15,6 +15,9 @@ function inScale(midi){return MODES[S.mode].iv.indexOf(ivOf(midi))>=0;}
 function label(midi){var m=MODES[S.mode],iv=ivOf(midi),k=m.iv.indexOf(iv);
   if(k>=0)return S.deg?dlab(m.iv)[k]:spell(m.iv)[k];
   return PCN[midi%12];}
+// فرت نت خونه (pitch class) روی یک سیم؛ و پاورکورد روی هر سیم (برای کوک‌های دراپ هم درسته)
+function rootFret(s,pc){return ((pc-OPEN[s])%12+12)%12;}
+function pow5(s,f){var m=OPEN[s]+f,out=[{s:s,f:f}];if(s-1>=0)out.push({s:s-1,f:m+7-OPEN[s-1]});if(s-2>=0)out.push({s:s-2,f:m+12-OPEN[s-2]});return out.filter(function(n){return n.f>=0&&n.f<=NF;});}
 function chordMidis(st){var m=midiAt(st.s,st.f);return st.pc?[m,m+7,m+12]:[m];}
 function chordFrets(st){var out=[{s:st.s,f:st.f}];if(!st.pc)return out;
   var m=midiAt(st.s,st.f);

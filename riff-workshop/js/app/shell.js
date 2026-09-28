@@ -79,8 +79,9 @@ function renderPresetCards(){var box=$('presetcards');if(!box)return;box.innerHT
     var b=EL('button','nitem','<span class="ic" aria-hidden="true">'+P1.ic+'</span><span class="nt">'+P1.t+'</span>');b.setAttribute('data-page',P1.id);b.onclick=function(){goPage(P1.id);};nav.appendChild(b);});
   var st=PAGES.filter(function(x){return x.id==='settings';})[0],sbtn=EL('button','nitem','<span class="ic" aria-hidden="true">'+st.ic+'</span><span class="nt">'+st.t+'</span>');sbtn.setAttribute('data-page','settings');sbtn.onclick=function(){goPage('settings');};$('navfoot').appendChild(sbtn);
   $('menubtn').onclick=function(){$('snav').classList.add('open');$('scrim').classList.add('on');};$('scrim').onclick=closeNav;
+  $('tunpill').onclick=function(e){e.stopPropagation();var kp=$('keypop');kp.hidden=false;$('keypill').setAttribute('aria-expanded','true');kp.scrollTop=0;};
   $('keypill').onclick=function(e){e.stopPropagation();var kp=$('keypop'),open=kp.hidden;kp.hidden=!open;this.setAttribute('aria-expanded',open);};
-  document.addEventListener('pointerdown',function(e){var kp=$('keypop');if(!kp.hidden&&!kp.contains(e.target)&&e.target!==$('keypill')&&!$('keypill').contains(e.target))closeKeyPop();});
+  document.addEventListener('pointerdown',function(e){var kp=$('keypop');if(!kp.hidden&&!kp.contains(e.target)&&e.target!==$('keypill')&&!$('keypill').contains(e.target)&&!$('tunpill').contains(e.target))closeKeyPop();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeKeyPop();closeNav();}});
   $('srchbtn').onclick=openCmd;$('gplay').onclick=function(){stop();};$('gundo').onclick=function(){undo();};
   // theme

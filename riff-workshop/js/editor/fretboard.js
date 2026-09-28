@@ -6,7 +6,7 @@ function buildNeck(){buildNeckInto($('neck'),onCell);buildNeckInto($('rneck'),on
 function buildNeckInto(nk,handler){
   nk.innerHTML='';
   nk.style.gridTemplateColumns='30px 44px '+FW.map(function(w){return w+'px';}).join(' ');
-  for(var s=0;s<6;s++){
+  for(var s=0;s<NS;s++){
     var sn=document.createElement('div');sn.className='sname';sn.textContent=SNAME[s];nk.appendChild(sn);
     for(var f=0;f<=NF;f++){
       var b=document.createElement('button');b.className='cell'+(f===0?' open':'');b.dataset.s=s;b.dataset.f=f;
@@ -20,8 +20,8 @@ function buildNeckInto(nk,handler){
   for(var f2=0;f2<=NF;f2++){var fn=document.createElement('div');fn.className='fnum';fn.textContent=f2;nk.appendChild(fn);}
   var x=30+44,cx=[];for(var i=0;i<NF;i++){cx.push(x+FW[i]/2);x+=FW[i];}
   var top=6;
-  [3,5,7,9,15,17,19,21].forEach(function(f){addInlay(cx[f-1],top+RH*3);});
-  [12,24].forEach(function(f){addInlay(cx[f-1],top+RH*1.5);addInlay(cx[f-1],top+RH*4.5);});
+  [3,5,7,9,15,17,19,21].forEach(function(f){addInlay(cx[f-1],top+RH*NS/2);});
+  [12,24].forEach(function(f){addInlay(cx[f-1],top+RH*NS/4);addInlay(cx[f-1],top+RH*NS*3/4);});
   function addInlay(l,t){var d=document.createElement('div');d.className='inlay';d.style.left=l+'px';d.style.top=t+'px';nk.appendChild(d);}
 }
 function refreshNeck(){

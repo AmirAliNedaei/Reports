@@ -445,3 +445,16 @@ kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-botto
 .rectake{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
 .recnote{color:var(--rust)}
 @media (prefers-reduced-motion:reduce){.reclvlw i{transition:none}}
+/* instrument & tuning picker (inside the key popover) */
+#tunbox{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+#tunbox .row{gap:6px;flex-wrap:wrap;align-items:center}
+.tuncur{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline}
+.tuncur b{font-size:17px}
+.tunedit{border:1px dashed var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.tunstr select{font:inherit;direction:ltr}
+.tunstr small{color:var(--muted);margin-inline-end:4px}
+.tunwelcome{background:var(--surface2);border-radius:10px;padding:10px 12px;margin:0 0 12px;line-height:1.8}
+.tunwelcome .btn{margin-inline-start:6px}
+/* typed tempo */
+.bpmbig .bpmin{width:3.6em;font:inherit;font-size:34px;font-weight:800;text-align:center;background:transparent;color:inherit;border:1px solid var(--line);border-radius:8px;padding:0 4px;font-variant-numeric:tabular-nums;direction:ltr}
+.ctl input[type=range]+.numin{width:4.2em;margin-inline-start:6px}

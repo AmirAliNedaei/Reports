@@ -22,7 +22,7 @@ function miniTab(box,events,idx){
   box.innerHTML='';var g=EL('div','trow');var w=events.map(function(e){return Math.max(24,Math.min(44,14+ticks(e)*0.3));});
   g.style.gridTemplateColumns='26px '+w.map(function(x){return Math.round(x)+'px';}).join(' ');
   var st=0,starts=events.map(function(e){var s=st;st+=ticks(e);return s;});
-  ['tq','s0','s1','s2','s3','s4','s5'].forEach(function(r){g.appendChild(EL('div','tl',r[0]==='s'?SNAME[+r[1]]:''));
+  ['tq'].concat((function(){var a=[];for(var q=0;q<NS;q++)a.push('s'+q);return a;})()).forEach(function(r){g.appendChild(EL('div','tl',r[0]==='s'?SNAME[+r[1]]:''));
     events.forEach(function(e,i){var d=EL('div','tc'+(r==='tq'?' tq':'')+(starts[i]%384===0?' bl':starts[i]%96===0?' beat':'')+(i===idx?' now':''));d.dataset.i=i;
       var sp=EL('span');sp.textContent=r==='tq'?techLabel(e,events[i+1]):noteText(e,+r[1]).t;d.appendChild(sp);g.appendChild(d);});});
   box.appendChild(g);}

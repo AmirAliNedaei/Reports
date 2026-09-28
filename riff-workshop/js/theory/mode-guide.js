@@ -24,8 +24,8 @@ function guideRender(){var box=$('guidebox');if(!box)return;var m=GUIDE.m||(MG[S
   var r=EL('div','row');var b1=EL('button','btn','شنیدن آکورد امضا');b1.onclick=function(){listenProg(G.ch.map(function(j){return triad(m,j);}));};
   var b2=EL('button','btn primary','ریف نمونه در ویرایشگر');b2.onclick=function(){guideRiff(m);};var b3=EL('button','btn','بررسی ریف خودم');b3.onclick=function(){if(m!==S.mode)setMode(m);goPage('editor');var an=$('checks').closest('section');an.classList.remove('folded');setTimeout(function(){reveal($('checks'));},60);};
   r.appendChild(b1);r.appendChild(b2);r.appendChild(b3);$('guidecur').appendChild(r);}
-function guideRiff(m){var iv=MODES[m].iv,rf=((S.key-1)%12+12)%12,G=MG[m],E=[];
+function guideRiff(m){var iv=MODES[m].iv,rf=rootFret(LOW,S.key),G=MG[m],E=[];
   var seq=[G.sig,2,G.sig,4,G.sig,3,1,0];
-  seq.forEach(function(dg,i){var f=rf+iv[dg];if(f>14)f-=12;var a=blankEv('16',false,false,[{s:5,f:rf}]);a.t.pm=true;var c=blankEv('16',false,false,[{s:5,f:rf}]);c.t.pm=true;var h=blankEv('8',false,false,[{s:5,f:f},{s:4,f:f+2}]);h.t.acc=dg===G.sig;E.push(a,c,h);});
+  seq.forEach(function(dg,i){var f=rf+iv[dg];if(f>14)f-=12;var a=blankEv('16',false,false,[{s:LOW,f:rf}]);a.t.pm=true;var c=blankEv('16',false,false,[{s:LOW,f:rf}]);c.t.pm=true;var h=blankEv('8',false,false,pow5(LOW,f).slice(0,2));h.t.acc=dg===G.sig;E.push(a,c,h);});
   if(m!==S.mode){S.mode=m;renderModes();}
   ideaLoad(E,'نمونه‌ی '+MODES[m].n,{drums:'gallop'});}

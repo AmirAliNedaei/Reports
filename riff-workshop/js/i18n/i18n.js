@@ -32,7 +32,7 @@ var I18N=(function(){
       else if(m.type==='attributes')trAttr(m.target,m.attributeName);
       else Array.prototype.forEach.call(m.addedNodes,function(x){if(x.nodeType===3)trNode(x);else if(x.nodeType===1)apply(x);});});});
     mo.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:ATTRS});}
-  function setDir(){var h=document.documentElement;h.setAttribute('lang',LANG);h.setAttribute('dir',LANG==='en'?'ltr':'rtl');document.title=LANG==='en'?'Riff Forge · C# Standard':'کارگاه ریف C# Standard';}
+  function setDir(){var h=document.documentElement;h.setAttribute('lang',LANG);h.setAttribute('dir',LANG==='en'?'ltr':'rtl');document.title=LANG==='en'?'Riff Forge · '+TUNING.name:'کارگاه ریف '+TUNING.name;}
   return {tr:tr,apply:apply,watch:watch,setDir:setDir};
 })();
 // ترجمه‌ی متن‌هایی که در فایل‌های داده تعریف می‌شن (کلید مثل دیکشنری: اعداد لاتین، فاصله‌ی یکسان)

@@ -28,8 +28,8 @@ function chordIdeas(notes,rootPc,pcs){
   for(var b=0;b<2;b++){for(var k=0;k<3;k++){var e1=blankEv('16',false,false,[{s:low.s,f:low.f}]);e1.t.pm=true;var e2=blankEv('16',false,false,[{s:low.s,f:low.f}]);e2.t.pm=true;var h=blankEv('8',false,false,cp(ns.slice(0,3)));h.t.acc=true;B.push(e1,e2,h);}
     var hit=blankEv('q',false,false,cp(ns));hit.t.ring=true;hit.t.acc=true;B.push(hit);}
   // 3. gallop on the root power chord (root on the lowest string that has it)
-  var rs=5,rf=nearestFret(5,[rootPc],Math.min(center,9));if(rf===null||rf>12){rs=4;rf=nearestFret(4,[rootPc],Math.min(center,9));}
-  var pw=[{s:rs,f:rf},{s:rs-1,f:rf+2},{s:rs-2,f:rf+2}];
+  var rs=LOW,rf=nearestFret(LOW,[rootPc],Math.min(center,9));if(rf===null||rf>12){rs=LOW-1;rf=nearestFret(rs,[rootPc],Math.min(center,9));}
+  var pw=pow5(rs,rf);
   for(var g=0;g<8;g++){var last=g===7;if(last){var fin=blankEv('q',false,false,cp(ns));fin.t.ring=true;fin.t.acc=true;D.push(fin);break;}
     var c1=blankEv('8',false,false,cp(pw));c1.t.acc=g%4===0;var c2=blankEv('16',false,false,[{s:rs,f:rf}]);c2.t.pm=true;var c3=blankEv('16',false,false,[{s:rs,f:rf}]);c3.t.pm=true;D.push(c1,c2,c3);}
   // 4. tremolo melody on the top chord tones
@@ -44,7 +44,7 @@ function chordIdeas(notes,rootPc,pcs){
   var s1=blankEv('8',false,false,[{s:sec.s,f:sec.f}]);s1.lg='h';C.push(s1,blankEv('8',false,false,[{s:sec.s,f:Math.min(NF,sec.f+2)}]),blankEv('q',false,false,[{s:low.s,f:low.f}]));
   var vv=blankEv('h',false,false,cp(ns));vv.t.ring=true;C.push(vv);
   // 6. sweep: one chord tone per string, up and back down in 16ths
-  var sw=[5,4,3,2,1,0].map(function(s){return {s:s,f:nearestFret(s,pcs,center)};}).filter(function(n){return n.f!==null;});
+  var sw=(function(){var a=[];for(var q=LOW;q>=0;q--)a.push(q);return a;})().map(function(s){return {s:s,f:nearestFret(s,pcs,center)};}).filter(function(n){return n.f!==null;});
   var path=sw.concat(sw.slice(1,-1).reverse());while(path.length<12)path.push(sw[path.length%sw.length]);
   path.slice(0,12).forEach(function(n,i){var e=blankEv('16',false,false,[n]);if(i===0)e.t.acc=true;F.push(e);});
   var sv=blankEv('q',false,false,[sw[sw.length-1]]);sv.t.vib=true;F.push(sv);

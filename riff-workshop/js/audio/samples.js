@@ -13,7 +13,7 @@ function sbLoad(inst){
     sbFetch(inst,m).then(function(buf){var r=ac.decodeAudioData(buf,function(b){SBUF[inst][m]=b;res();},function(){res();});if(r&&r.catch)r.catch(function(){res();});}).catch(function(){res();});});}));
   return SBLOAD[inst];}
 function sbGet(inst,midi){var B=SBUF[inst];if(!B)return null;var best=null,bd=99;for(var k in B){var d=Math.abs(+k-midi);if(d<bd){bd=d;best=+k;}}
-  return best===null||bd>6?null:{buf:B[best],rate:Math.pow(2,(midi-best)/12)};}
+  return best===null||bd>(midi<best?12:6)?null:{buf:B[best],rate:Math.pow(2,(midi-best)/12)};}
 function sbPrime(){var T=TONEMAP[S.tone]||TONEMAP.drive;if(!T.main)return;
   var first=!SBLOAD[T.main];
   Promise.all([sbLoad(T.main),sbLoad(T.pm)]).then(function(){if(first&&!SBTOLD&&SBUF[T.main]&&Object.keys(SBUF[T.main]).length){SBTOLD=true;toast('صدای واقعی گیتار آماده‌ست');}

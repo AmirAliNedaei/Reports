@@ -10,7 +10,10 @@ var PRESETS={
 };
 function loadPreset(k){var p=PRESETS[k]||LESSONS[k];if(!p)return;S.key=1;S.ts={n:4,d:4};S.sel=null;renderKeys();
   S.mode=p.mode;S.bpm=p.bpm;
-  if(p.events){S.events=JSON.parse(JSON.stringify(p.events)).map(fixEv);S.cur=0;S.tone=p.tone||S.tone;setTone();curId=null;$('rname').value=p.name;renderLib();}
-  else setFromSteps(p.steps,p.steps.length);
+  if(p.events){S.events=tunRef(function(){return JSON.parse(JSON.stringify(p.events)).map(fixEv);});S.cur=0;S.tone=p.tone||S.tone;setTone();curId=null;$('rname').value=p.name;renderLib();}
+  else S.events=tunRef(function(){return stepsToEvents(p.steps,p.steps.length);});
+  presetFit();renderKeys();
   syncControls();renderModes();changed();}
+// کد داخل fn با کوک مرجع (C# Standard شش‌سیم) اجرا می‌شه
+function tunRef(fn){var o=OPEN.slice(),n=NS,l=LOW;OPEN.length=0;TUNREFOPEN.forEach(function(m){OPEN.push(m);});NS=6;LOW=5;try{return fn();}finally{OPEN.length=0;o.forEach(function(m){OPEN.push(m);});NS=n;LOW=l;}}
 function syncControls(){$('bpm').value=S.bpm;$('bpmv').textContent=S.bpm;$('tone').value=S.tone;var tv=tsKey(S.ts);if(!Array.prototype.some.call($('tsig').options,function(o){return o.value===tv;})){var o=document.createElement('option');o.value=tv;o.textContent=tv.replace(':',' (')+(S.ts.g?')':'');$('tsig').appendChild(o);}$('tsig').value=tv;$('drums').value=S.drums||'none';}

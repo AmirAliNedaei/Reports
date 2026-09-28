@@ -33,7 +33,7 @@ function bandRender(){var box=$('bandlist');if(!box)return;box.innerHTML='';
   BANDS.forEach(function(b,i){var x=EL('button','litem','<span class="ltr">'+b.n+'</span><small>'+b.g+'</small>');x.setAttribute('aria-pressed',i===BD.i);x.onclick=function(){BD.i=i;bandRender();};box.appendChild(x);});
   var b=BANDS[BD.i],st=STYLES[b.app.style];
   var h='<div class="bhead"><div><div class="bn ltr">'+b.n+'</div><div class="hint">'+b.g+'، '+b.c+'</div></div><span class="vbadge '+(b.tv===1?'ok':b.tv===2?'mid':'no')+'">'+(b.tv===1?'کوک تأییدشده':b.tv===2?'کوک طبق Songsterr':'کوک تأیید نشد')+'</span></div>'+
-    '<div class="gline"><b>کوک:</b> '+b.tune+'</div>'+(b.rel?'<div class="gline"><b>نسبت به گیتار تو (C# Standard):</b> '+b.rel+'</div>':'')+'<div class="gline"><b>حال‌وهوا:</b> '+b.mood+'</div>'+
+    '<div class="gline"><b>کوک:</b> '+b.tune+'</div>'+(b.rel?'<div class="gline"><b>'+(TUNING.id===TUNREF?'نسبت به گیتار تو (C# Standard):':'نسبت به C# Standard:')+'</b> '+b.rel+'</div>':'')+'<div class="gline"><b>حال‌وهوا:</b> '+b.mood+'</div>'+
     '<div class="gline"><b>تکنیک‌ها و عناصر:</b></div><div class="tags">'+b.tr.map(function(t){return '<span>'+t+'</span>';}).join('')+'</div>'+
     '<div class="gline"><b>نکته برای ساختن:</b> '+b.tip+'</div>'+
     '<div class="gline"><b>تنظیمات پیشنهادی در برنامه:</b> سبک '+st.name+'، مُد <span class="ltr">'+MODES[b.app.mode].n+'</span>، تمپوی حدود '+fa(b.app.bpm)+'. این‌ها پیشنهاد من بر اساس سبک بند هستن، نه تحلیل آهنگ خاص.</div>'+

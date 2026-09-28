@@ -50,7 +50,7 @@ function gpBytes(at,tex){var st=new at.Settings(),imp=new at.importer.AlphaTexIm
 function gpFileName(){return (gpText($('rname').value)||'riff').replace(/[\/:*?"<>|]/g,'-')+'.gp';}
 function gpExport(){
   if(!hasRiff()){toast('ریف خالیه؛ اول چند نت بنویس');return;}
-  var name=$('rname').value.trim()||'Riff',tex=riffToTex(S.events,{title:name,subtitle:MN()+' · C# Standard',bpm:S.bpm,tone:S.tone,ts:S.ts});
+  var name=$('rname').value.trim()||'Riff',tex=riffToTex(S.events,{title:name,subtitle:MN()+' · '+TUNING.name,bpm:S.bpm,tone:S.tone,ts:S.ts});
   toast('در حال ساختن فایل Guitar Pro…');
   gpLoad().then(function(at){var bytes=gpBytes(at,tex),blob=new Blob([bytes],{type:'application/octet-stream'}),url=URL.createObjectURL(blob),a=document.createElement('a');
     a.href=url;a.download=gpFileName();document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},4000);
