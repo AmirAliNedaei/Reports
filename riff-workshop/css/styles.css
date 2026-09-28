@@ -416,3 +416,13 @@ html[lang="en"] :is(h1,h2,h3,p,.btn,.chip,.tb,.feel,.qprompt,.litem,.hint,.insig
 .lib .empty{color:var(--muted);font-size:14px;border-top:0}
 kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
 @media (prefers-reduced-motion:reduce){.dot,.bar i,.toast{transition:none}}
+/* recording over the backing */
+.recrow{gap:14px;align-items:center;margin-bottom:8px}
+#recgo.recon{background:var(--rust);border-color:var(--rust);color:#fff}
+.rectime{font-variant-numeric:tabular-nums;font-weight:700;color:var(--rust)}
+.reclvlw{height:6px;border-radius:3px;background:var(--surface2);overflow:hidden;margin:2px 0 10px;max-width:420px}
+.reclvlw i{display:block;height:100%;width:0;background:var(--ok);transition:width .06s linear}
+.reclvlw i.hot{background:var(--rust)}
+.rectake{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
+.recnote{color:var(--rust)}
+@media (prefers-reduced-motion:reduce){.reclvlw i{transition:none}}
