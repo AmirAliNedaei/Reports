@@ -415,6 +415,28 @@
 </section>
 
 <section class="panel">
+  <h2>ضبط گیتار روی بکینگ</h2>
+  <div id="recbox">
+    <p class="hint" style="margin:0 0 10px">گیتارت رو به کارت صدا یا میکروفون وصل کن، بکینگ رو انتخاب کن و «ضبط» رو بزن. ریف و درام برنامه پخش می‌شن و صدای تو هم‌زمان ضبط می‌شه. با هدفون گوش بده تا بکینگ توی میکروفون نره.</p>
+    <p class="hint recnote" id="recnote" hidden>ضبط فقط وقتی کار می‌کنه که برنامه با <span class="ltr">https</span> یا <span class="ltr">localhost</span> باز شده باشه و مرورگر اجازه‌ی میکروفون بده.</p>
+    <div class="row recrow">
+      <button class="btn primary" id="recgo">● ضبط</button>
+      <label class="ctl">بکینگ <select id="recbk"><option value="riff">ریف و درام</option><option value="drums">فقط درام</option><option value="metro">فقط مترونوم</option></select></label>
+      <label class="ctl"><input type="checkbox" id="reccount" checked> یک میزان شمارش قبل از شروع</label>
+      <label class="ctl"><input type="checkbox" id="recmon"> شنیدن صدای خودم (کمی تأخیر داره)</label>
+      <span class="rectime ltr" id="rectime"></span>
+    </div>
+    <div class="reclvlw" title="بلندی ورودی میکروفون"><i id="reclvl"></i></div>
+    <div class="row recrow">
+      <label class="ctl">هم‌تراز کردن <input type="range" id="reclat" min="0" max="400" value="30"><span id="reclatv" class="ltr">30</span> میلی‌ثانیه</label>
+      <label class="ctl">بکینگ <input type="range" id="recbal" min="0" max="100" value="60"> گیتار</label>
+    </div>
+    <p class="hint" style="margin:4px 0 10px">اگه صدای گیتارت توی پخش کمی عقب‌تر از بکینگ شنیده می‌شه، عدد «هم‌تراز کردن» رو بیشتر کن. مترونوم ضبط نمی‌شه.</p>
+    <div id="rectakes"></div>
+  </div>
+</section>
+
+<section class="panel">
   <h2>بررسی حال‌وهوا</h2>
   <div class="an">
     <div>
@@ -510,6 +532,7 @@
 <script src="js/theory/ideas.js"></script>
 <script src="js/theory/mode-guide.js"></script>
 <script src="js/band.js"></script>
+<script src="js/audio/recorder.js"></script>
 <script src="js/app/shell.js"></script>
 <script src="js/main.js"></script>
 </body>

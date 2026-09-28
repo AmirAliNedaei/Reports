@@ -52,6 +52,7 @@ python3 -m http.server 8000
 | `js/audio/sample-manifest.js` | فهرست mp3های موجود (`SAMPLES`، `SAMPLE_DIR`) |
 | `js/audio/samples.js` | لود و پخش نمونه‌های صدای واقعی گیتار (`sbLoad`، `voice`) |
 | `js/audio/transport.js` | پخش و زمان‌بندی (`start`، `stop`، `schedule`) و درامز |
+| `js/audio/recorder.js` + `rec-worklet.js` | **ضبط گیتار با میکروفون روی بکینگ**: بکینگ (خروجی `FX.master`) و میکروفون در یک AudioWorklet هم‌زمان ضبط می‌شن؛ جبران تأخیر، میکس و خروجی WAV. فقط با https یا localhost کار می‌کنه. (قبل از `shell.js` لود می‌شه چون از `EL()` استفاده می‌کنه) |
 | `js/editor/fretboard.js` | دسته‌ی گیتار تعاملی |
 | `js/editor/tab.js` | **ویرایشگر تب**: رندر تب و نت‌نویسی ریتم (`buildTab`) |
 | `js/theory/analysis.js` | تحلیل ریف |
