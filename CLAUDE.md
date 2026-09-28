@@ -57,6 +57,7 @@ python3 -m http.server 8000
 | `js/theory/analysis.js` | تحلیل ریف |
 | `js/theory/key.js` | انتخاب کلید و مد |
 | `js/editor/editing.js` | undo/redo، کلیپ‌بورد، ابزار دیرش و تکنیک، `toast()`، کپی تب |
+| `js/export/guitar-pro.js` | **خروجی Guitar Pro 7/8**: `riffToTex` ریف رو به AlphaTex تبدیل می‌کنه و `gpExport` با کتابخانه‌ی alphaTab (پوشه‌ی `vendor/alphatab/`، فقط موقع زدن دکمه لود می‌شه) فایل `.gp` می‌سازه |
 | `js/editor/presets.js` | درس‌ها (`LESSONS`) و پریست‌ها (`PRESETS`) |
 | `js/editor/controls.js` | اتصال دکمه‌ها و میان‌برهای کیبورد ویرایشگر |
 | `js/banks/progressions.js` | **بانک پیشرفت‌های آکورد** |
@@ -82,6 +83,7 @@ python3 -m http.server 8000
 
 ### بقیه‌ی فایل‌ها
 
+- `vendor/alphatab/`: کتابخانه‌ی alphaTab 1.8.4 (مجوز MPL-2.0، دست‌نخورده) برای ساختن فایل Guitar Pro. تنها کد شخص ثالث برنامه است و فقط موقع خروجی گرفتن لود می‌شود.
 - `index.html`: کل ساختار HTML همه‌ی صفحه‌ها (هر صفحه یه `section` با id مشخص است) + لیست اسکریپت‌ها.
 - `css/styles.css`: همه‌ی استایل‌ها. تم با `data-theme` روی `<html>` و متغیرهای CSS کنترل می‌شه.
 - `samples/<ساز>/<midi>.mp3`: نمونه‌های صدای گیتار واقعی. ساز یکی از `dist`، `od`، `clean`، `mute`، `acou` یا `harm` است و اسم فایل شماره‌ی MIDI نت. نت‌های بینابینی با تغییر سرعت پخش از نزدیک‌ترین نمونه ساخته می‌شن (حداکثر ۶ نیم‌پرده فاصله).
