@@ -3,7 +3,7 @@ $('play').onclick=function(){playing?stop():start(false);};
 $('loop').onclick=function(){S.loop=!S.loop;this.setAttribute('aria-pressed',S.loop);};
 $('bpm').onchange=$('bpm').oninput=function(){var v=+this.value;if(!(v>=30&&v<=300))return;S.bpm=v;$('bpmv').textContent=S.bpm;save();};
 $('tone').onchange=function(){S.tone=this.value;setTone();save();};
-$('copy').onclick=copyTab;
+$('copy').onclick=copyTab;$('gpx').onclick=gpExport;
 $('wipe').onclick=function(){if(!hasRiff()){toast('ریف از قبل خالیه');return;}doClean({riff:true});};
 $('onchg').value=PREF.onchg;$('onchg').onchange=function(){PREF.onchg=this.value;savePref();};
 if($('cleanbtn'))$('cleanbtn').onclick=function(){var p=$('cleanpanel'),open=p.hidden;p.hidden=!open;this.setAttribute('aria-expanded',open);if(open)p.scrollIntoView({behavior:'smooth',block:'nearest'});};
