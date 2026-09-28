@@ -38,7 +38,7 @@ function rtGo(){if(RT.on){rtStop();return;}
 function rtTick(){if(!RT.on)return;var p=RT.p,sp=RT.sp,beatT=p.ts&&p.ts[1]===8?48:96;
   while(RT.startT+RT.barIdx*p.len*sp<ac.currentTime+0.2){var bt=RT.startT+RT.barIdx*p.len*sp,isDemo=RT.barIdx<RT.demo;
     for(var b=0;b<p.len;b+=beatT)click(bt+b*sp,b===0);
-    p.on.forEach(function(o){var t=bt+o*sp;if(isDemo||$('rtguide').checked)playMidis([OPEN[5]+((S.key-1+12)%12)],t,true);if(!isDemo)RT.exp.push({t:t,o:o,hit:false,bar:RT.barIdx});});
+    p.on.forEach(function(o){var t=bt+o*sp;if(isDemo||$('rtguide').checked)playMidis([OPEN[LOW]+rootFret(LOW,S.key)],t,true);if(!isDemo)RT.exp.push({t:t,o:o,hit:false,bar:RT.barIdx});});
     RT.barIdx++;}
   var now=ac.currentTime-(ac.outputLatency||0);RT.exp.forEach(function(x){if(!x.hit&&!x.gone&&now>x.t+0.15){x.gone=true;RT.miss++;RT.streak=0;rtMark(x.o,'m');rtStats();}});
   RT.exp=RT.exp.filter(function(x){return now<x.t+1;});}

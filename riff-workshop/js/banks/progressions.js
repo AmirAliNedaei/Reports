@@ -62,7 +62,7 @@ function triad(mk,j){var iv=MODES[mk].iv,nm=spell(iv);
   return {name:name,rn:r,q:q,pc:(S.key+a)%12,tones:[nm[j],nm[(j+2)%7],nm[(j+4)%7]],pcs:[a,b,c].map(function(x){return (S.key+x)%12;})};}
 // آکورد پیشرفت به‌صورت صدابندی قابل‌اجرا (برای ایده‌ها)
 function triadVoicing(ch){var V=solveVoicings(ch.pc,CTI[ch.q==='min'?'min':ch.q==='dim'?'dim':ch.q==='aug'?'aug':'maj'],'full');return V.length?V[0].notes:null;}
-function placeChord(ch){var lf=(ch.pc-1+12)%12;var pos=lf<=7?{s:5,f:lf}:{s:4,f:(ch.pc-6+12)%12};
+function placeChord(ch){var lf=rootFret(LOW,ch.pc);var pos=lf<=7?{s:LOW,f:lf}:{s:LOW-1,f:rootFret(LOW-1,ch.pc)};
   pos.power=(ch.q==='maj'||ch.q==='min');return pos;}
 function renderBank(){
   var sel=$('style');if(!sel.options.length){Object.keys(STYLES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=STYLES[k].name;sel.appendChild(o);});sel.value=curStyle;}

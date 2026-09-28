@@ -57,7 +57,7 @@ function buildTab(){
     var beats=[];row.forEach(function(M){M.beats.forEach(function(i,k){beats.push({i:i,first:k===0,m:M.m});});});
     var rw=beats.reduce(function(a,b){return a+W(b.i);},0),last=ri===rows.length-1,fac=Math.max(1,Math.min(last&&rows.length>1?1.35:2.2,avail/Math.max(1,rw)));
     var g=document.createElement('div');g.className='trow';g.style.gridTemplateColumns='30px '+beats.map(function(b){return Math.floor(W(b.i)*fac)+'px';}).join(' ');
-    ['mn','tq','s0','s1','s2','s3','s4','s5','rh'].forEach(function(r){
+    ['mn','tq'].concat((function(){var a=[];for(var q=0;q<NS;q++)a.push('s'+q);return a;})(),['rh']).forEach(function(r){
       var lab=document.createElement('div');lab.className='tl'+(r==='rh'?' rh':r==='mn'?' mn':'');lab.textContent=r[0]==='s'?SNAME[+r[1]]:'';g.appendChild(lab);
       beats.forEach(function(b,bi){
         var i=b.i,e=E[i],d=document.createElement('div'),sp=document.createElement('span');

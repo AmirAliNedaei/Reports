@@ -14,7 +14,7 @@ function chordPcs(j,sev){var iv=MODES[S.mode].iv;var ks=[0,2,4];if(sev)ks.push(6
 var SPT=[
  {k:'alt',n:'آلترنیت پیکینگ'},{k:'leg',n:'لگاتو'},{k:'trem',n:'ترمولو'},{k:'gal',n:'گالاپ و چاگ'},{k:'skip',n:'پرش سیم'},{k:'sweep',n:'سوییپ'},{k:'eco',n:'اکونومی'}];
 function spExercises(tech){
-  var iv=MODES[S.mode].iv,rf=((S.key-1)%12+12)%12,out=[],A=goodRun(5,3,0);
+  var iv=MODES[S.mode].iv,rf=rootFret(0,S.key),rl=rootFret(LOW,S.key),out=[],A=goodRun(5,3,0);
   function add(id,n,desc,ev){if(ev&&ev.length)out.push({id:tech+'-'+id,n:n,desc:desc,ev:fitBar(ev)});}
   if(tech==='alt'||tech==='leg'||tech==='eco'){
     var mark=tech==='leg'?legatoMark:null;
@@ -33,7 +33,7 @@ function spExercises(tech){
     add('dyad','ترمولو دوصدایی','دیادهای سومی روی دو سیم بالا؛ صدای کلاسیک بلک و ملودیک دث.',dy.map(function(n){var e=blankEv('h',false,false,n);e.t.trem=true;return e;}));
   }
   if(tech==='gal'){
-    var ped=function(f){return {s:5,f:f};},g=[],rg=[],ch=[];
+    var ped=function(f){return {s:LOW,f:f};},g=[],rg=[],ch=[];rf=rl;
     [2,3,4,5].forEach(function(dg){var f=rf+iv[dg];g.push(blankEv('16',false,false,[ped(rf)]),blankEv('16',false,false,[ped(rf)]),blankEv('8',false,false,[ped(f)]));});
     g.forEach(function(e,i){if(i%3<2)e.t.pm=true;});
     add('gal','گالاپ روی پدال','دولاچنگ، دولاچنگ، چنگ؛ دو نت اول پالم‌میوت روی سیم باز یا ریشه.',g);
@@ -71,10 +71,10 @@ function spRender(){
 function spKey(){return SP.ex?S.mode+'|'+SP.ex.id:'';}
 function spLoadBpm(){var st=+$('spstart').value||60;SP.bpm=st;SP.reps=0;}
 function spUI(){
-  $('spbpm').textContent=fa(SP.bpm);var st=+$('spstart').value,tg=+$('sptarget').value;
+  if(document.activeElement!==$('spbpm'))$('spbpm').value=SP.bpm;var st=+$('spstart').value,tg=+$('sptarget').value;
   $('spbar').style.width=Math.max(0,Math.min(100,(SP.bpm-st)/Math.max(1,tg-st)*100))+'%';
   var b=P.best[spKey()];$('spbest').textContent=b?'بهترین رکورد این تمرین: '+fa(b)+' BPM':'هنوز رکوردی ثبت نشده';
   $('spinfo').textContent=LP.on&&LP.o.tag==='sp'?'تکرار '+fa(SP.reps+1)+(SP.auto?'، '+fa(+$('spreps').value-(SP.reps%+$('spreps').value))+' تکرار تا افزایش بعدی':''):'از '+fa(st)+' تا '+fa(tg)+' BPM';
 }
-function spBump(d,rec){SP.bpm=Math.max(30,Math.min(320,SP.bpm+d));if(rec){var k=spKey();if(!P.best[k]||SP.bpm>P.best[k]){P.best[k]=SP.bpm;saveP();}}spUI();
+function spBump(d,rec){SP.bpm=bpmClamp(SP.bpm+d);if(rec){var k=spKey();if(!P.best[k]||SP.bpm>P.best[k]){P.best[k]=SP.bpm;saveP();}}spUI();
   if(d>0&&SP.bpm>=+$('sptarget').value)toast('به هدف رسیدی! 🎉');}

@@ -4,7 +4,7 @@ var LIBKEY='riff-workshop-lib-v1';
 var store={kind:'local',col:null,items:[]},curId=null,armDel=null;
 function localItems(){try{return JSON.parse(localStorage.getItem(LIBKEY)||'[]')||[];}catch(e){return [];}}
 function localWrite(items){try{localStorage.setItem(LIBKEY,JSON.stringify(items));return true;}catch(e){return false;}}
-function snapshotRiff(name){return {name:name,key:S.key,mode:S.mode,bpm:S.bpm,tone:S.tone,ts:tsKey(S.ts),drums:S.drums||'none',eventsJson:JSON.stringify(S.events),updatedAt:Date.now()};}
+function snapshotRiff(name){return {name:name,key:S.key,mode:S.mode,bpm:S.bpm,tone:S.tone,ts:tsKey(S.ts),drums:S.drums||'none',open:OPEN.slice(),tuning:TUNING.name,eventsJson:JSON.stringify(S.events),updatedAt:Date.now()};}
 function useLocal(){store.kind='local';store.col=null;store.items=localItems();$('storeline').textContent='ذخیره در همین مرورگر';renderLib();}
 function saveRiff(asNew){
   var name=$('rname').value.trim();
@@ -22,7 +22,7 @@ function saveLocal(id,data){var it=localItems().filter(function(x){return x.id!=
 function openRiff(it){
   if(playing)stop();
   var evs=null;
-  try{if(it.eventsJson)evs=JSON.parse(it.eventsJson).map(fixEv);else if(it.stepsJson){var st=JSON.parse(it.stepsJson);evs=stepsToEvents(st,it.len||st.length);}}catch(e){evs=null;}
+  try{if(it.eventsJson){evs=JSON.parse(it.eventsJson);if(Array.isArray(it.open)&&it.open.join()!==OPEN.join())retune(evs,it.open,0);evs=evs.map(fixEv);}else if(it.stepsJson){var st=JSON.parse(it.stepsJson);evs=stepsToEvents(st,it.len||st.length);}}catch(e){evs=null;}
   if(!evs){toast('این ریف خراب شده');return;}
   S.key=(it.key>=0&&it.key<12)?it.key:1;renderKeys();S.mode=MODES[it.mode]?it.mode:'aeo';S.bpm=it.bpm||140;S.tone=normT(it.tone);setTone();
   S.ts=parseTs(it.ts);S.drums=it.drums||S.drums||'none';S.events=evs;S.cur=0;S.sel=null;curId=it.id;$('rname').value=it.name||'';

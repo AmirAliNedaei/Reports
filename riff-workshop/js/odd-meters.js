@@ -50,21 +50,21 @@ function oddTs(){var M=ODD[ODS.i];return {n:M.n,d:M.d,g:M.g[ODS.gi].slice()};}
 function oddUnits(){var M=ODD[ODS.i],g=M.g[ODS.gi],a=[];g.forEach(function(x,k){for(var j=0;j<x;j++)a.push({g:k,first:j===0});});return a;}
 // ۸ الگوی گیتار برای هر گروه‌بندی، در کلید و مُد فعلی
 function oddRiffs(){
-  var M=ODD[ODS.i],g=M.g[ODS.gi],U=oddU(M.d),iv=MODES[S.mode].iv,rf=((S.key-1)%12+12)%12;
+  var M=ODD[ODS.i],g=M.g[ODS.gi],U=oddU(M.d),iv=MODES[S.mode].iv,rf=rootFret(LOW,S.key);
   var slot=Math.min(48,U),sd=slot===48?'8':'16',spu=U/slot,fine=slot===48?'16':'16',fpu=U/24;
-  var P5=function(f){return [{s:5,f:f},{s:4,f:f+2},{s:3,f:f+2}];};
+  var P5=function(f){return pow5(LOW,f);};
   var degF=function(dg){var f=rf+iv[dg%7];return f>12?f-12:f;};
   var cp=function(a){return a.map(function(x){return {s:x.s,f:x.f};});};
   // یک نت با طول دلخواه (با تای اگه یک دیرش استاندارد نباشه)
   function long(tk,notes,flag){var out=[];decomp(tk).forEach(function(p,j){var e=blankEv(p.d,p.dot,false,cp(notes));if(j)e.t.tie=true;if(flag)flag(e,j);out.push(e);});return out;}
   function hi(midi){for(var s=0;s<3;s++){var f=midi-OPEN[s];if(f>=5&&f<=17)return {s:s,f:f};}return {s:1,f:Math.max(0,Math.min(NF,midi-OPEN[1]))};}
-  var home=OPEN[0]+((S.key-OPEN[0])%12+12)%12+12;
+  var home=OPEN[0]+rootFret(0,S.key)+12;
   function scaleMidi(step){var o=Math.floor(step/7),k=((step%7)+7)%7;return home+iv[k]+12*o;}
   var A=[],B=[],C=[],D=[],E=[],F=[],G=[],H=[];
   // A: accented chug, chords walk i-VI-VII-i across groups
   var walk=[0,5,6,3,4,2];
   g.forEach(function(x,k){var f=degF(walk[k%walk.length]),units=x*spu;
-    for(var j=0;j<units;j++){var e=j===0?blankEv(sd,false,false,P5(f)):blankEv(sd,false,false,[{s:5,f:rf}]);if(j===0)e.t.acc=true;else e.t.pm=true;A.push(e);}});
+    for(var j=0;j<units;j++){var e=j===0?blankEv(sd,false,false,P5(f)):blankEv(sd,false,false,[{s:LOW,f:rf}]);if(j===0)e.t.acc=true;else e.t.pm=true;A.push(e);}});
   // B: melodic, arpeggiate a triad per group on strings 4-3-2
   var cyc=[0,5,2,6,3,4];
   g.forEach(function(x,k){var j0=cyc[k%cyc.length],pcs=chordPcs(j0),units=x*spu,notes=[];
@@ -73,22 +73,22 @@ function oddRiffs(){
   // C: technical 16ths, accent the group start and move the pedal note
   var mv=[0,1,0,4,0,1,5];
   g.forEach(function(x,k){var units=x*fpu,f=degF(mv[k%mv.length]);
-    for(var j=0;j<units;j++){var e;if(j===0){e=blankEv('16',false,false,P5(f));e.t.acc=true;}else{e=blankEv('16',false,false,[{s:5,f:j%3===2?degF(1):rf}]);e.t.pm=j%3!==2;}C.push(e);}});
+    for(var j=0;j<units;j++){var e;if(j===0){e=blankEv('16',false,false,P5(f));e.t.acc=true;}else{e=blankEv('16',false,false,[{s:LOW,f:j%3===2?degF(1):rf}]);e.t.pm=j%3!==2;}C.push(e);}});
   // D: gallop inside each group: accented chord, then 16th pairs on the low string
   g.forEach(function(x,k){var f=degF(walk[k%walk.length]),tk=x*U,e=blankEv(sd,false,false,P5(f));e.t.acc=true;D.push(e);tk-=slot;
-    while(tk>=24){var a=blankEv('16',false,false,[{s:5,f:rf}]);a.t.pm=true;D.push(a);tk-=24;}});
+    while(tk>=24){var a=blankEv('16',false,false,[{s:LOW,f:rf}]);a.t.pm=true;D.push(a);tk-=24;}});
   // E: tremolo melody (black metal): one scale note per group, tremolo-picked for the whole group
   var mel=[4,3,2,1,0,1,2,3,5,4];
   g.forEach(function(x,k){var n=hi(scaleMidi(7+mel[k%mel.length]));long(x*U,[n],function(e){e.t.trem=true;if(!e.t.tie)e.t.acc=true;}).forEach(function(e){E.push(e);});});
   // F: djent syncopation: chord hit, a rest, then palm-muted low string to the end of the group
   g.forEach(function(x,k){var f=degF(mv[k%mv.length]),units=x*fpu;
-    for(var j=0;j<units;j++){var e;if(j===0){e=blankEv('16',false,false,P5(f));e.t.acc=true;}else if(j===1)e=blankEv('16',false,false,null);else{e=blankEv('16',false,false,[{s:5,f:0}]);e.t.pm=true;if(j===units-1&&units>3){e.t.pm=false;e.t.dead=true;}}F.push(e);}});
+    for(var j=0;j<units;j++){var e;if(j===0){e=blankEv('16',false,false,P5(f));e.t.acc=true;}else if(j===1)e=blankEv('16',false,false,null);else{e=blankEv('16',false,false,[{s:LOW,f:0}]);e.t.pm=true;if(j===units-1&&units>3){e.t.pm=false;e.t.dead=true;}}F.push(e);}});
   // G: lead line: each group starts on a chord tone, walks up the scale, last note gets vibrato
   var tones=[0,2,4,2,5,4,3,1];
   g.forEach(function(x,k){var st=7+tones[k%tones.length],units=x*spu;
     for(var j=0;j<units;j++){var e=blankEv(sd,false,false,[hi(scaleMidi(st+j))]);if(j===0)e.t.acc=true;if(j===units-1&&units>1){e.t.vib=true;}if(j>0&&j<units-1)e.lg='h';G.push(e);}});
   // H: half-time breakdown: one ringing chord per group, open low string drives the groups
-  g.forEach(function(x,k){var f=k%2?degF(1):0,notes=f?P5(f):[{s:5,f:0},{s:4,f:2},{s:3,f:2}];
+  g.forEach(function(x,k){var f=k%2?degF(1):0,notes=P5(f);
     long(x*U,notes,function(e,j){if(!j){e.t.acc=true;e.t.ring=true;}}).forEach(function(e){H.push(e);});});
   return [{n:'چاگ لهجه‌دار',en:'accented chug',dr:'rock',d:'روی شروع هر گروه یک پاورکورد با لهجه، بقیه چاگ پالم‌میوت روی نت خونه. ساده‌ترین راه برای «شنیدن» گروه‌بندی.',ev:A},
           {n:'آرپژ گروه‌بندی‌شده',en:'grouped arpeggio',dr:'rock',d:'هر گروه یک آکورد؛ نت‌ها آرپژ می‌شن و اولین نت هر گروه لهجه داره. مناسب بخش‌های ملودیک و پراگرسیو.',ev:B},
@@ -174,7 +174,7 @@ function oddToEditor(){var ts=oddTs();if(playing)stop();lpStop();S.ts={n:ts.n,d:
   var once=S.events.slice();S.events=once.concat(JSON.parse(JSON.stringify(once)).map(fixEv));S.cur=0;S.sel=null;S.drums=ODS.drum;S.bpm=+$('oddbpm').value;curId=null;$('rname').value=ODD[ODS.i].m+' '+ts.g.join('+');
   syncControls();changed();renderLib();goPage('editor');toast('دو میزان '+ODD[ODS.i].m+' در ویرایشگر؛ حالا تغییرش بده و دوباره بررسی کن');}
 (function(){if(!$('oddbox'))return;
-  $('oddplay').onclick=function(){oddPlay(false);};$('oddbpm').oninput=function(){$('oddbpmv').textContent=this.value;};
+  $('oddplay').onclick=function(){oddPlay(false);};$('oddbpm').oninput=function(){$('oddbpmv').value=this.value;};
   $('oddedit').onclick=oddToEditor;$('oddcheck').onclick=oddCheck;
   var tips=[['اول بشمار، بعد بنواز','قبل از نوشتن ریف، گروه‌بندی رو با صدای بلند بشمار (مثلاً «۱-۲ ۱-۲ ۱-۲-۳»). اگه نتونی بشماری، نمی‌تونی درست بنویسیش.'],
     ['شروع هر گروه باید شنیده بشه','لهجه، پاورکورد، سیم باز، یا تغییر نت روی اول هر گروه. بقیه‌ی واحدها رو ساده‌تر (پالم‌میوت یا تکرار) نگه دار.'],

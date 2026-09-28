@@ -1,5 +1,7 @@
 /* مدل ریتم: دیرش نت‌ها، میزان‌ها، تبدیل استپ به رویداد */
 /* ---------- rhythm model ---------- */
+var BPMMIN=20,BPMMAX=300;
+function bpmClamp(v){v=Math.round(+v);return v>=BPMMIN&&v<=BPMMAX?v:(v>BPMMAX?BPMMAX:BPMMIN);}
 var DT={w:384,h:192,q:96,'8':48,'16':24,'32':12};
 var DORDER=['w','h','q','8','16','32'];
 var DFR={w:'1',h:'1/2',q:'1/4','8':'1/8','16':'1/16','32':'1/32'};
@@ -21,7 +23,7 @@ function beamG(){return S.ts.d===16?96:S.ts.d===8?144:96;}
 function T(e,k){return !!(e&&e.t&&e.t[k]);}
 function blankEv(d,dot,tri,notes){return {d:d,dot:!!dot,tri:!!tri,rest:!notes||!notes.length,notes:notes||[],t:{},lg:'',sin:'',sout:'',bend:2,bt:'',harm:''};}
 function newEv(notes){return blankEv(S.nd.d,S.nd.dot,S.nd.tri,notes);}
-function fixEv(e){var b=blankEv(DT[e.d]?e.d:'8',e.dot,e.tri,Array.isArray(e.notes)?e.notes.filter(function(n){return n&&n.s>=0&&n.s<6&&n.f>=0&&n.f<=NF;}):[]);
+function fixEv(e){var b=blankEv(DT[e.d]?e.d:'8',e.dot,e.tri,Array.isArray(e.notes)?e.notes.filter(function(n){return n&&n.s>=0&&n.s<NS&&n.f>=0&&n.f<=NF;}):[]);
   b.rest=!!e.rest||!b.notes.length;b.t=(e.t&&typeof e.t==='object')?e.t:{};['lg','sin','sout','bt','harm'].forEach(function(k){if(typeof e[k]==='string')b[k]=e[k];});if(e.bend)b.bend=e.bend;return b;}
 function decomp(t){var P=[[384,'w',0],[288,'h',1],[192,'h',0],[144,'q',1],[96,'q',0],[72,'8',1],[48,'8',0],[36,'16',1],[24,'16',0],[12,'32',0]],out=[];
   while(t>=12){for(var i=0;i<P.length;i++){if(P[i][0]<=t){out.push({d:P[i][1],dot:!!P[i][2]});t-=P[i][0];break;}}}return out;}

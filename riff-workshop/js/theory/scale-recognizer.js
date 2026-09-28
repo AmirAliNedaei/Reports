@@ -33,10 +33,10 @@ function parseTab(txt,order){
   var lines=txt.split(/\n/).map(function(l){return l.trim();}).filter(function(l){return l.length;});
   var out=[],err=null;
   lines.forEach(function(l,k){
-    var sn=null,mm=l.match(/^(?:s|string|سیم)?\s*([1-6])\s*[:|)]/i);
+    var sn=null,mm=l.match(/^(?:s|string|سیم)?\s*([1-9])\s*[:|)]/i);
     if(mm){sn=+mm[1];l=l.slice(mm[0].length);}
-    else sn=order==='low'?6-k:1+k;
-    if(sn<1||sn>6){err='بیشتر از شش خط نوشتی';return;}
+    else sn=order==='low'?NS-k:1+k;
+    if(sn<1||sn>NS){err='بیشتر از تعداد سیم‌ها خط نوشتی';return;}
     var frets=(l.match(/\d+/g)||[]).map(Number);
     frets.forEach(function(f){if(f>NF){err='فرت '+f+' بیشتر از ۲۴ است';return;}var midi=OPEN[sn-1]+f;out.push({pc:midi%12,w:1,midi:midi,s:sn,f:f});});
   });

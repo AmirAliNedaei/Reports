@@ -12,7 +12,7 @@
 <body>
 <div class="appshell" id="app">
  <aside class="snav" id="snav" aria-label="بخش‌های برنامه">
-  <div class="brand"><span class="logo"><svg class="skull" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4C17 4 8 14 8 28c0 8 3 13 8 16v8c0 2 2 4 4 4h4v-6h4v6h8v-6h4v6h4c2 0 4-2 4-4v-8c5-3 8-8 8-16C56 14 47 4 32 4z" fill="currentColor"/><ellipse cx="22" cy="30" rx="7" ry="8" fill="var(--bg)"/><ellipse cx="42" cy="30" rx="7" ry="8" fill="var(--bg)"/><path d="M32 38l-4 7h8z" fill="var(--bg)"/><path d="M14 20l-8-6M50 20l8-6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><div><b>کارگاه ریف</b><span class="wm ltr">Riff Forge</span><small class="ltr">C# Standard · 24 frets</small></div></div>
+  <div class="brand"><span class="logo"><svg class="skull" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4C17 4 8 14 8 28c0 8 3 13 8 16v8c0 2 2 4 4 4h4v-6h4v6h8v-6h4v6h4c2 0 4-2 4-4v-8c5-3 8-8 8-16C56 14 47 4 32 4z" fill="currentColor"/><ellipse cx="22" cy="30" rx="7" ry="8" fill="var(--bg)"/><ellipse cx="42" cy="30" rx="7" ry="8" fill="var(--bg)"/><path d="M32 38l-4 7h8z" fill="var(--bg)"/><path d="M14 20l-8-6M50 20l8-6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><div><b>کارگاه ریف</b><span class="wm ltr">Riff Forge</span><small class="ltr" id="brandsub">C# Standard · 24 frets</small></div></div>
   <nav id="navlist"></nav>
   <div class="snfoot" id="navfoot"></div>
  </aside>
@@ -22,6 +22,7 @@
    <button class="iconbtn" id="menubtn" aria-label="منو">☰</button>
    <div class="ptitle"><div class="kick" id="pgroup"></div><h1 id="ptitle"></h1><p id="pdesc"></p></div>
    <div class="tbar">
+    <button class="keypill" id="tunpill" aria-haspopup="dialog" title="ساز و کوک"><span class="kl">ساز و کوک</span><b id="tunpilltxt" class="ltr"></b></button>
     <button class="keypill" id="keypill" aria-haspopup="dialog" aria-expanded="false" title="کلید و مُد"><span class="kl">کلید و مُد</span><b id="keypilltxt" class="ltr"></b></button>
     <button class="iconbtn gplay" id="gplay" title="توقف پخش ریف (Space)" aria-label="توقف پخش" hidden>■</button>
     <button class="iconbtn" id="gundo" title="برگشت آخرین تغییر ریف (Ctrl+Z)" aria-label="برگشت" disabled>↶</button>
@@ -48,6 +49,9 @@
 </section>
 
 <section>
+  <p class="tunwelcome" id="tunwelcome" hidden>خوش اومدی! اول بگو گیتارت چند سیمه و با چه کوکی کوکش کردی تا همه‌ی تب‌ها، آکوردها و مثال‌ها برای ساز خودت ساخته بشن. <button class="btn" id="tunkeep">همین C# Standard شش‌سیم خوبه</button></p>
+  <h2>ساز و کوک</h2>
+  <div id="tunbox"></div>
   <h2>کلید (نت خونه)</h2>
   <div class="row" id="keys" style="margin-bottom:6px"></div>
   <label class="ctl" style="margin-bottom:16px">با عوض کردن کلید یا مُد:
@@ -81,15 +85,15 @@
     <p class="hint" id="spdesc" style="margin:2px 0 8px"></p>
     <div class="tab-wrap"><div class="mtab" id="sptab"></div></div>
     <div class="sprow">
-      <div class="bpmbig"><button class="btn" id="spminus" aria-label="کم کردن تمپو">−</button><b id="spbpm">60</b><span>BPM</span><button class="btn" id="spplus" aria-label="زیاد کردن تمپو">+</button></div>
+      <div class="bpmbig"><button class="btn" id="spminus" aria-label="کم کردن تمپو">−</button><input type="number" id="spbpm" class="bpmin" min="20" max="300" value="60" aria-label="تمپو (BPM)"><span>BPM</span><button class="btn" id="spplus" aria-label="زیاد کردن تمپو">+</button></div>
       <div class="grp">
         <button class="btn primary" id="spplay">شروع</button>
         <button class="btn" id="spclean">✓ تکرار تمیز</button>
         <button class="btn" id="spmiss">✗ اشتباه</button>
       </div>
       <div class="grp">
-        <label class="ctl">شروع <input type="number" id="spstart" min="30" max="300" value="60" class="numin"></label>
-        <label class="ctl">هدف <input type="number" id="sptarget" min="30" max="320" value="140" class="numin"></label>
+        <label class="ctl">شروع <input type="number" id="spstart" min="20" max="300" value="60" class="numin"></label>
+        <label class="ctl">هدف <input type="number" id="sptarget" min="20" max="300" value="140" class="numin"></label>
         <label class="ctl">گام <input type="number" id="spstep" min="1" max="20" value="4" class="numin"></label>
       </div>
       <div class="grp">
@@ -151,7 +155,7 @@
         <div class="stats" id="rtstats" style="margin-top:10px"></div>
       </div>
       <div class="side">
-        <div class="row"><button class="btn primary" id="rtgo">شروع</button><label class="ctl">تمپو <input type="range" id="rtbpm" min="50" max="200" value="90"><span id="rtbpmv" class="ltr">90</span></label></div>
+        <div class="row"><button class="btn primary" id="rtgo">شروع</button><label class="ctl">تمپو <input type="range" id="rtbpm" min="20" max="300" value="90"><input type="number" id="rtbpmv" class="numin" min="20" max="300" value="90" aria-label="تمپو (BPM)"></label></div>
         <label class="ctl"><input type="checkbox" id="rtguide"> صدای الگو در همه‌ی میزان‌ها</label>
         <div id="rtlist"></div>
       </div>
@@ -284,7 +288,7 @@
     <div class="row" id="impprog" style="margin-bottom:10px"></div>
     <div class="row" style="margin-bottom:10px">
       <button class="btn primary" id="impplay">شروع</button>
-      <label class="ctl">تمپو <input type="range" id="impbpm" min="50" max="200" value="100"><span id="impbpmv" class="ltr">100</span></label>
+      <label class="ctl">تمپو <input type="range" id="impbpm" min="20" max="300" value="100"><input type="number" id="impbpmv" class="numin" min="20" max="300" value="100" aria-label="تمپو (BPM)"></label>
       <label class="ctl">هر آکورد <select id="impbars"><option value="1">۱ میزان</option><option value="2" selected>۲ میزان</option></select></label>
       <label class="ctl">همراهی <select id="impsty"><option value="pm">پاورکورد پالم‌میوت</option><option value="arp">آرپژ</option><option value="hit">آکورد کشیده</option></select></label>
       <label class="ctl"><input type="checkbox" id="imp7" checked> نمایش هفتم</label>
@@ -314,7 +318,7 @@
         <div class="dgrid" id="odddgrid"></div>
         <div class="row" style="margin-top:12px">
           <button class="btn primary" id="oddplay">پخش</button>
-          <label class="ctl">تمپو <input type="range" id="oddbpm" min="60" max="220" value="120"><span id="oddbpmv" class="ltr">120</span></label>
+          <label class="ctl">تمپو <input type="range" id="oddbpm" min="20" max="300" value="120"><input type="number" id="oddbpmv" class="numin" min="20" max="300" value="120" aria-label="تمپو (BPM)"></label>
           <button class="btn" id="oddedit">باز کردن در ویرایشگر</button>
         </div>
         <h3 class="h3">بررسی ریف من در این کسر</h3>
@@ -362,7 +366,7 @@
       <button class="pb" id="countin" aria-pressed="false" title="شمارش یک میزان قبل از شروع" aria-label="شمارش قبل از شروع"><b style="font-size:11px">1234</b></button>
     </div>
     <div class="tg">
-      <label class="ctl" title="تمپو">♩= <input type="number" id="bpm" min="30" max="300" value="140" class="numin"></label><span id="bpmv" hidden>140</span>
+      <label class="ctl" title="تمپو">♩= <input type="number" id="bpm" min="20" max="300" value="140" class="numin"></label><span id="bpmv" hidden>140</span>
       <label class="ctl" title="سرعت تمرین">⏱ <select id="speed"><option value="50">50%</option><option value="60">60%</option><option value="70">70%</option><option value="80">80%</option><option value="90">90%</option><option value="100" selected>100%</option><option value="120">120%</option><option value="150">150%</option></select></label><span id="speedv" hidden>100%</span>
       <select id="tsig" title="کسر میزان" aria-label="کسر میزان"></select>
       <select id="tone" title="صدا" aria-label="صدا"><option value="drive">دیستورشن</option><option value="od">اوردرایو</option><option value="clean">کلین</option><option value="acoustic">آکوستیک</option><option value="synth">سینت سبک</option></select>
@@ -507,6 +511,7 @@
 <script src="js/editor/tab.js"></script>
 <script src="js/theory/analysis.js"></script>
 <script src="js/theory/key.js"></script>
+<script src="js/core/tuning.js"></script>
 <script src="js/editor/editing.js"></script>
 <script src="js/export/guitar-pro.js"></script>
 <script src="js/editor/presets.js"></script>

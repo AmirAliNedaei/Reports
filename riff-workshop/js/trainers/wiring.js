@@ -23,7 +23,7 @@
   fqStats();renderHeat();fqPaint();
   // rhythm
   $('rtgo').onclick=rtGo;$('rttap').addEventListener('pointerdown',function(e){e.preventDefault();rtTap();});
-  $('rtbpm').oninput=function(){$('rtbpmv').textContent=this.value;};rtRenderList();rtShow();
+  $('rtbpm').oninput=function(){$('rtbpmv').value=this.value;};rtRenderList();rtShow();
   // ear
   $('earnew').onclick=earNew;$('earrep').onclick=earPlay;$('earlvl').onchange=function(){EAR.q=null;$('earans').innerHTML='';};earRender();
   // sight
@@ -41,7 +41,7 @@
   // improv
   buildNeckInto($('impneck'),function(e){audition({t:'n',s:+e.currentTarget.dataset.s,f:+e.currentTarget.dataset.f,pc:false,pm:false});});
   $('impplay').onclick=function(){if(LP.on&&LP.o.tag==='imp'){lpStop();return;}impStart();};
-  $('impbpm').oninput=function(){$('impbpmv').textContent=this.value;};
+  $('impbpm').oninput=function(){$('impbpmv').value=this.value;};
   ['impbars','impsty'].forEach(function(id){$(id).onchange=function(){if(LP.on&&LP.o.tag==='imp')impStart();};});
   $('imp7').onchange=function(){impShow(IMP.ci<0?0:IMP.ci);};
   impRender();
@@ -49,3 +49,8 @@
   var cs=$('cxsearch');if(cs){var go=function(){var r=parseChord(cs.value);if(!r){$('cxhint').textContent=cs.value.trim()?'این آکورد رو نشناختم. نمونه: C#m7b5، Asus2، E5، Bbmaj7':'';return;}$('cxhint').textContent='';CXNAME={pc:r.pc,n:r.name};$('cxroot').value=r.pc;$('cxtype').value=r.id;renderExplorer();};
     cs.addEventListener('input',go);cs.addEventListener('keydown',function(e){if(e.key==='Enter')go();});}
 })();
+// هر اسلایدر تمپو یک خونه‌ی عددی کنارش داره: هر عددی بین ۲۰ و ۳۰۰ رو می‌شه دستی نوشت
+(function(){['rtbpm','impbpm','oddbpm'].forEach(function(id){var r=$(id),n=$(id+'v');if(!r||!n)return;var prev=r.oninput;
+  r.oninput=function(e){if(prev)prev.call(this,e);n.value=this.value;};
+  n.onchange=function(){var v=bpmClamp(this.value);this.value=v;r.value=v;if(prev)prev.call(r);};});
+  var sb=$('spbpm');if(sb){sb.onchange=function(){SP.bpm=bpmClamp(this.value);this.value=SP.bpm;spUI();};sb.onkeydown=function(e){if(e.key==='Enter')this.blur();};}})();

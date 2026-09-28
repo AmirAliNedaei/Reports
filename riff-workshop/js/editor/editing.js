@@ -71,9 +71,10 @@ function togglePC(){var e=needEv();if(!e)return;var lo=e.notes[0];
   if(has)e.notes=[lo];else{if(a.f>NF||b.f>NF){toast('این پاورکورد از فرت ۲۴ بیرون می‌زنه');return;}e.notes=[lo,a,b];}
   changed();auditionEv(e);}
 function barre(minor){var e=needEv();if(!e)return;var lo=e.notes[0],f=lo.f,sh;
-  if(lo.s===5)sh=minor?[[5,f],[4,f+2],[3,f+2],[2,f],[1,f],[0,f]]:[[5,f],[4,f+2],[3,f+2],[2,f+1],[1,f],[0,f]];
-  else if(lo.s===4)sh=minor?[[4,f],[3,f+2],[2,f+2],[1,f+1],[0,f]]:[[4,f],[3,f+2],[2,f+2],[1,f+2],[0,f]];
-  else{toast('ریشه‌ی آکورد رو روی سیم ۶ یا ۵ بذار');return;}
+  // روی هر سیم بالاتر، نزدیک‌ترین فرت (از f تا f+3) که نت آکورد باشه؛ برای هر کوکی درسته
+  if(lo.s<2){toast('ریشه‌ی آکورد رو روی یکی از سیم‌های بم بذار');return;}
+  var r=OPEN[lo.s]+f,tri=[0,minor?3:4,7];sh=[[lo.s,f]];
+  for(var s=lo.s-1;s>=0;s--){for(var ff=Math.max(0,f);ff<=f+3;ff++){if(tri.indexOf(((OPEN[s]+ff-r)%12+12)%12)>=0){sh.push([s,ff]);break;}}}
   if(sh.some(function(x){return x[1]>NF;})){toast('این آکورد از فرت ۲۴ بیرون می‌زنه');return;}
   e.notes=sh.map(function(x){return {s:x[0],f:x[1]};});changed();auditionEv(e);}
 function setRest(){var e=curEv();if(e){e.rest=true;e.notes=[];e.t={};e.lg=e.sin=e.sout=e.bt=e.harm='';}else S.events.push(newEv(null));S.cur=Math.min(S.events.length,S.cur+1);changed();}
@@ -81,17 +82,17 @@ function dupEv(){var e=curEv();if(!e){toast('یک خانه رو انتخاب ک�
 function insEv(){S.events.splice(S.cur,0,newEv(null));changed();}
 function delEv(){if(!curEv())return;S.events.splice(S.cur,1);S.cur=Math.min(S.cur,S.events.length);changed();}
 function tabText(){
-  var E=S.events,tl='   ',dl='   ',lines=SNAME.map(function(n,s){return ((s===0?'c#':n)+'  ').slice(0,2)+'|';}),tk=0;
+  var E=S.events,tl='   ',dl='   ',lines=SNAME.map(function(n,s){return ((s===0?n.toLowerCase():n)+'  ').slice(0,2)+'|';}),tk=0;
   E.forEach(function(e,i){
     if(i>0&&tk%barT()===0){lines=lines.map(function(l){return l+'|';});tl+=' ';dl+=' ';}
     tk+=ticks(e);
-    var cells=[0,1,2,3,4,5].map(function(s){var t=noteText(e,s).t;return t==='r'?'':t;});
+    var cells=SNAME.map(function(x,s){var t=noteText(e,s).t;return t==='r'?'':t;});
     var tq=techLabel(e,E[i+1]).replace(/ /g,''),du=DASC[e.d]+(e.dot?'.':'')+(e.tri?'3':'')+(e.rest?'r':'');
     var w=Math.max(1,tq.length,du.length,Math.max.apply(null,cells.map(function(c){return c.length;})));
     lines=lines.map(function(l,s){return l+(cells[s]+'-'.repeat(w)).slice(0,w)+'-';});
     tl+=(tq+' '.repeat(w)).slice(0,w)+' ';dl+=(du+' '.repeat(w)).slice(0,w)+' ';
   });
-  return 'Riff in '+MN()+' (C# standard tuning, '+S.bpm+' bpm, '+S.ts.n+'/'+S.ts.d+')\n'+
+  return 'Riff in '+MN()+' ('+TUNING.name+' tuning, '+S.bpm+' bpm, '+S.ts.n+'/'+S.ts.d+')\n'+
     'Rhythm: w=1 h=1/2 q=1/4 e=1/8 s=1/16 t=1/32, .=dotted, 3=triplet, r=rest\n'+
     'PM=palm mute LR=let ring H/P=hammer/pull sl=slide S=shift slide b/br/pb=bend ~=vibrato x=dead ()=ghost <>=harmonic PH=pinch T=tap ≡=tremolo >=accent ·=staccato ⌒=tie\n\n'+
     tl+'\n'+lines.join('\n')+'\n'+dl;

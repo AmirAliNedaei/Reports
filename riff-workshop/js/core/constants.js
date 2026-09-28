@@ -1,6 +1,33 @@
 /* ثابت‌ها: کوک C# Standard، نام نت‌ها، مدها، اعداد فارسی */
 var OPEN=[61,56,52,47,42,37];
 var SNAME=['C#','G#','E','B','F#','C#'];
+/* ---------- tunings (number of strings, standard, drop, custom) ---------- */
+// OPEN و SNAME همیشه از سیم ۱ (زیر) تا سیم آخر (بم)ان؛ NS تعداد سیم‌ها و LOW اندیس بم‌ترین سیمه.
+// هر جا «بم‌ترین سیم» لازمه از LOW استفاده کن، نه عدد ۵.
+var NS=6,LOW=5;
+var TNAMES=['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+var TSTD={6:[0,5,10,15,19,24],7:[0,5,10,15,20,24,29],8:[0,5,10,15,20,25,29,34]};
+var TUNINGS=[],TUNKEY='riff-workshop-tuning',TUNREF='6-std-37',TUNING=null;
+(function(){
+  function nm(m){return TNAMES[m%12];}
+  function add(n,g,id,name,low){TUNINGS.push({id:id,n:n,g:g,name:name,low:low});}
+  var R={6:[40,39,38,37,36,35,34,33],7:[35,34,33,32,31,30],8:[30,29,28,27,26]};
+  [6,7,8].forEach(function(n){
+    R[n].forEach(function(r){add(n,'std',n+'-std-'+r,nm(r)+' Standard',TSTD[n].map(function(x){return r+x;}));});
+    R[n].forEach(function(r){var low=TSTD[n].map(function(x){return r+x;});low[0]-=2;add(n,'drop',n+'-drop-'+low[0],'Drop '+nm(low[0]),low);});});
+  // کوک‌های معروف دیگه (۶ سیم)
+  [['6-dadgad','DADGAD',[38,45,50,55,57,62]],['6-dbld','Double Drop D',[38,45,50,55,59,62]],['6-opend','Open D',[38,45,50,54,57,62]],
+   ['6-opene','Open E',[40,47,52,56,59,64]],['6-openg','Open G',[38,43,50,55,59,62]],['6-openc','Open C',[36,43,48,55,60,64]],['6-dropc-open','Open C5 (C G C G G C)',[36,43,48,55,55,60]]].forEach(function(x){add(6,'other',x[0],x[1],x[2]);});
+})();
+function tunFind(id){for(var i=0;i<TUNINGS.length;i++)if(TUNINGS[i].id===id)return TUNINGS[i];return null;}
+function tunCustoms(){try{var a=JSON.parse(localStorage.getItem(TUNKEY+'-custom')||'[]');return Array.isArray(a)?a.filter(function(t){return t&&t.id&&Array.isArray(t.low)&&t.low.length>=4&&t.low.length<=9;}):[];}catch(e){return [];}}
+function tunGet(id){var t=tunFind(id);if(t)return t;var c=tunCustoms().filter(function(x){return x.id===id;})[0];return c||null;}
+// کوک رو روی OPEN/SNAME/NS/LOW اعمال می‌کنه (آرایه‌ها در جا عوض می‌شن)
+function tunApply(t){TUNING=t;var hi=t.low.slice().reverse();OPEN.length=0;SNAME.length=0;hi.forEach(function(m){OPEN.push(m);SNAME.push(TNAMES[m%12]);});NS=OPEN.length;LOW=NS-1;}
+function tunLabel(t){t=t||TUNING;return t.name+' · '+t.n+(t.custom?' *':'');}
+// همون لحظه‌ی لود، قبل از ساخته شدن هر چیزی، کوک ذخیره‌شده اعمال می‌شه
+(function(){var id=null;try{id=localStorage.getItem(TUNKEY);}catch(e){}tunApply(tunGet(id)||tunFind(TUNREF));})();
+function tunIsNew(){try{return !localStorage.getItem(TUNKEY);}catch(e){return false;}}
 var PCN=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 var FLATN=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 var MAJ=[0,2,4,5,7,9,11],LET=['C','D','E','F','G','A','B'],NAT=[0,2,4,5,7,9,11];
