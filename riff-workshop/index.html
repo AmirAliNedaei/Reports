@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>کارگاه ریف C# Standard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&family=Metal+Mania&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="appshell" id="app">
+ <aside class="snav" id="snav" aria-label="بخش‌های برنامه">
+  <div class="brand"><span class="logo"><svg class="skull" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4C17 4 8 14 8 28c0 8 3 13 8 16v8c0 2 2 4 4 4h4v-6h4v6h8v-6h4v6h4c2 0 4-2 4-4v-8c5-3 8-8 8-16C56 14 47 4 32 4z" fill="currentColor"/><ellipse cx="22" cy="30" rx="7" ry="8" fill="var(--bg)"/><ellipse cx="42" cy="30" rx="7" ry="8" fill="var(--bg)"/><path d="M32 38l-4 7h8z" fill="var(--bg)"/><path d="M14 20l-8-6M50 20l8-6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><div><b>کارگاه ریف</b><span class="wm ltr">Riff Forge</span><small class="ltr">C# Standard · 24 frets</small></div></div>
+  <nav id="navlist"></nav>
+  <div class="snfoot" id="navfoot"></div>
+ </aside>
+ <div class="scrim" id="scrim"></div>
+ <div class="mainc">
+  <header class="topbar">
+   <button class="iconbtn" id="menubtn" aria-label="منو">☰</button>
+   <div class="ptitle"><div class="kick" id="pgroup"></div><h1 id="ptitle"></h1><p id="pdesc"></p></div>
+   <div class="tbar">
+    <button class="keypill" id="keypill" aria-haspopup="dialog" aria-expanded="false" title="کلید و مُد"><span class="kl">کلید و مُد</span><b id="keypilltxt" class="ltr"></b></button>
+    <button class="iconbtn gplay" id="gplay" title="توقف پخش ریف (Space)" aria-label="توقف پخش" hidden>■</button>
+    <button class="iconbtn" id="gundo" title="برگشت آخرین تغییر ریف (Ctrl+Z)" aria-label="برگشت" disabled>↶</button>
+    <button class="iconbtn" id="srchbtn" title="جستجو (Ctrl+K)" aria-label="جستجو">⌕</button>
+    <button class="langbtn" id="langbtn" title="English">EN</button>
+   </div>
+  </header>
+  <div class="keypop" id="keypop" hidden></div>
+  <main id="pages">
+<section class="panel cleanp" id="cleanpanel">
+  <h2>چی پاک بشه؟</h2>
+  <div class="opts">
+    <label><input type="checkbox" id="cl-riff" checked><span>ریف فعلی<small>همه‌ی خانه‌ها، آکوردها و تکنیک‌ها. ریف‌های ذخیره‌شده دست نمی‌خورن.</small></span></label>
+    <label><input type="checkbox" id="cl-view" checked><span>نمایش روی دسته<small>الگوی سه‌نتی روشن‌شده و نت‌های انتخاب‌شده؛ دسته به حالت پیش‌فرض برمی‌گرده.</small></span></label>
+    <label><input type="checkbox" id="cl-rz"><span>نت‌های بخش تشخیص اسکیل<small>ترتیب نت‌ها، متن و تب واردشده و نتیجه‌ی تشخیص.</small></span></label>
+    <label><input type="checkbox" id="cl-set"><span>تنظیمات به حالت اول<small>کلید C#، مُد Aeolian، تمپو ۱۴۰، دیستورشن، طول چنگ و خاموش شدن گزینه‌های نمایش.</small></span></label>
+  </div>
+  <div class="row">
+    <button class="btn primary" id="cl-go">پاک کن</button>
+    <button class="btn" id="cl-all">همه‌چیز از اول</button>
+    <button class="btn" id="cl-close">بستن</button>
+  </div>
+  <p class="hint" style="margin:8px 0 0">بعد از هر پاک‌سازی تا چند ثانیه دکمه‌ی «برگردون» نمایش داده می‌شه.</p>
+</section>
+
+<section>
+  <h2>کلید (نت خونه)</h2>
+  <div class="row" id="keys" style="margin-bottom:6px"></div>
+  <label class="ctl" style="margin-bottom:16px">با عوض کردن کلید یا مُد:
+    <select id="onchg">
+      <option value="clear">صفحه تازه بشه و ریف پاک بشه</option>
+      <option value="move">ریف به کلید جدید منتقل بشه</option>
+      <option value="keep">ریف دست‌نخورده بمونه</option>
+    </select>
+  </label>
+  <h2>مُد یا اسکیل</h2>
+  <div class="row" id="modes"></div>
+  <div class="moodline"><b id="mname" class="ltr"></b><span id="mmood"></span><span id="mnotes" class="ltr"></span></div>
+  <div class="row" style="gap:18px">
+    <label class="ctl"><input type="checkbox" id="snap"> فقط نت‌های اسکیل قبول بشه</label>
+    <label class="ctl"><input type="checkbox" id="deg"> نمایش درجه به‌جای اسم نت</label>
+    <label class="ctl"><input type="checkbox" id="listen"> فقط شنیدن (بدون نوشتن در ریف)</label>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>تمرین امروز</h2>
+  <div id="homebox"></div>
+</section>
+
+<section class="panel">
+  <h2>تمرین سرعت</h2>
+  <div id="spbox">
+    <div class="row" id="sptech" style="margin-bottom:8px"></div>
+    <div class="row" id="spex" style="margin-bottom:10px"></div>
+    <div class="feel" id="spname"></div>
+    <p class="hint" id="spdesc" style="margin:2px 0 8px"></p>
+    <div class="tab-wrap"><div class="mtab" id="sptab"></div></div>
+    <div class="sprow">
+      <div class="bpmbig"><button class="btn" id="spminus" aria-label="کم کردن تمپو">−</button><b id="spbpm">60</b><span>BPM</span><button class="btn" id="spplus" aria-label="زیاد کردن تمپو">+</button></div>
+      <div class="grp">
+        <button class="btn primary" id="spplay">شروع</button>
+        <button class="btn" id="spclean">✓ تکرار تمیز</button>
+        <button class="btn" id="spmiss">✗ اشتباه</button>
+      </div>
+      <div class="grp">
+        <label class="ctl">شروع <input type="number" id="spstart" min="30" max="300" value="60" class="numin"></label>
+        <label class="ctl">هدف <input type="number" id="sptarget" min="30" max="320" value="140" class="numin"></label>
+        <label class="ctl">گام <input type="number" id="spstep" min="1" max="20" value="4" class="numin"></label>
+      </div>
+      <div class="grp">
+        <button class="btn" id="spmetro" aria-pressed="true">مترونوم</button>
+        <button class="btn" id="spauto" aria-pressed="false">نردبان خودکار</button>
+        <label class="ctl">هر <select id="spreps"><option>2</option><option selected>4</option><option>8</option></select> تکرار</label>
+      </div>
+    </div>
+    <div class="pbar" style="margin:10px 0 4px"><i id="spbar"></i></div>
+    <div class="row" style="justify-content:space-between"><span class="hint" id="spinfo"></span><span class="hint" id="spbest"></span></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>دسته‌شناسی</h2>
+  <div id="fqbox">
+    <div class="neck-wrap"><div class="neck" id="fqneck" aria-label="دسته برای آزمون"></div></div>
+    <div class="twocol" style="margin-top:12px">
+      <div>
+        <div class="qbox"><div class="qprompt" id="fqprompt">برای شروع «شروع راند» رو بزن</div><div class="ansgrid" id="fqans"></div><div class="hint" id="fqfb" style="min-height:24px;margin-top:8px"></div></div>
+        <div class="pbar" style="margin:10px 0"><i id="fqtime"></i></div>
+        <div class="stats" id="fqstats"></div>
+        <h3 class="h3">نقشه‌ی دقت</h3>
+        <div class="heat" id="fqheat"></div>
+        <p class="hint">سبز: ۹۰٪ به بالا، طلایی: ۷۰٪، نارنجی: ۵۰٪، قرمز: کمتر از ۵۰٪.</p>
+      </div>
+      <div class="side">
+        <button class="btn primary" id="fqgo" style="width:100%">شروع راند</button>
+        <div class="sgrp"><b>نوع آزمون</b>
+          <label><input type="radio" name="fqmode" value="pos" checked> جای روی دسته ← اسم نت</label>
+          <label><input type="radio" name="fqmode" value="note"> اسم نت ← جای روی دسته</label></div>
+        <div class="sgrp"><b>سختی</b>
+          <label><input type="radio" name="fqdiff" value="nat"> فقط نت‌های طبیعی</label>
+          <label><input type="radio" name="fqdiff" value="all" checked> همه‌ی نت‌ها</label>
+          <label><input type="radio" name="fqdiff" value="scale"> فقط نت‌های اسکیل فعلی</label></div>
+        <div class="sgrp"><b>سیم‌های فعال</b><div class="row" id="fqstr"></div></div>
+        <div class="sgrp"><b>تنظیمات</b>
+          <label class="ctl">بیشترین فرت <select id="fqmax"><option>5</option><option>7</option><option selected>12</option><option>15</option><option>24</option></select></label>
+          <label class="ctl">تعداد سؤال <select id="fqn"><option>10</option><option selected>20</option><option>30</option></select></label>
+          <label class="ctl">زمان هر سؤال <select id="fqlim"><option value="0">بدون محدودیت</option><option value="8">۸ ثانیه</option><option value="5" selected>۵ ثانیه</option><option value="3">۳ ثانیه</option></select></label>
+          <label class="ctl"><input type="checkbox" id="fqsnd" checked> پخش صدای نت</label></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>تمرین ریتم</h2>
+  <div id="rtbox">
+    <div class="twocol">
+      <div>
+        <div class="qbox">
+          <div class="qprompt" id="rtname"></div>
+          <div class="hint" id="rtdesc"></div>
+          <div class="bgrid" id="rtgrid" style="margin:14px 0"></div>
+          <button class="btn primary tapbtn" id="rttap">ضربه (Space)</button>
+          <div class="hint" id="rtfb" style="min-height:24px;margin-top:10px">اول الگو رو گوش بده، بعد همراهش ضربه بزن.</div>
+        </div>
+        <div class="stats" id="rtstats" style="margin-top:10px"></div>
+      </div>
+      <div class="side">
+        <div class="row"><button class="btn primary" id="rtgo">شروع</button><label class="ctl">تمپو <input type="range" id="rtbpm" min="50" max="200" value="90"><span id="rtbpmv" class="ltr">90</span></label></div>
+        <label class="ctl"><input type="checkbox" id="rtguide"> صدای الگو در همه‌ی میزان‌ها</label>
+        <div id="rtlist"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>تمرین گوش</h2>
+  <div id="earbox">
+    <div class="row" id="eardrill" style="margin-bottom:8px"></div>
+    <div class="row" style="margin-bottom:10px"><label class="ctl">سطح <select id="earlvl"><option value="1">آسان</option><option value="2" selected>متوسط</option><option value="3">سخت</option></select></label><span class="hint" id="earhint"></span></div>
+    <div class="qbox">
+      <div class="qprompt" id="earq">برای شروع «سؤال جدید» رو بزن</div>
+      <div class="row" style="justify-content:center;margin-top:10px"><button class="btn primary" id="earnew">سؤال جدید</button><button class="btn" id="earrep">دوباره پخش کن</button></div>
+      <div class="ansgrid" id="earans"></div>
+      <div class="hint" id="earfb" style="min-height:24px;margin-top:8px"></div>
+    </div>
+    <div class="stats" id="earstats" style="margin-top:10px"></div>
+    <div class="hint" id="earrecent" style="margin-top:8px"></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>نت‌خوانی</h2>
+  <div id="sightbox">
+    <div class="row" id="sglvl" style="margin-bottom:10px"></div>
+    <div class="qbox">
+      <div id="sgstaff"></div>
+      <div class="qprompt" style="font-size:17px">این نت چیه؟</div>
+      <div class="row" style="justify-content:center;margin-top:8px"><button class="btn" id="sglisten">شنیدن</button><button class="btn" id="sgnext">نت بعدی</button></div>
+      <div class="ansgrid" id="sgans"></div>
+      <div class="ansgrid" id="sgacc"></div>
+      <div class="hint" id="sgfb" style="min-height:24px;margin-top:8px"></div>
+    </div>
+    <div class="stats" id="sgstats" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<section>
+  <h2>دسته‌ی گیتار</h2>
+  <div class="neck-wrap"><div class="neck" id="neck" aria-label="دسته‌ی گیتار"></div></div>
+  <p class="hint">دایره‌ی نارنجی نت خونه است، سبزها نت‌های اسکیل. روی هر نت کلیک کنی فقط صداش پخش می‌شه؛ برای نوشتن ریف به «ویرایشگر تب» برو.</p>
+</section>
+
+<section class="panel">
+  <div class="row" style="justify-content:space-between;margin-bottom:6px">
+    <h2 style="margin:0">بانک پیشرفت آکورد</h2>
+    <label class="ctl">سبک <select id="style"></select></label>
+  </div>
+  <p class="hint" style="margin:0 0 12px">پنج پیشرفت برای <b class="ltr" id="bankmode"></b>. آکوردها از خود نت‌های همین مُد ساخته شدن. «شنیدن» اون‌ها رو با پاورکورد می‌زنه و «ساختن ریف» یه ریف ریتم ۳۲ خانه‌ای ازش می‌سازه که می‌تونی تغییرش بدی.</p>
+  <p class="hint" id="bankinfo" style="margin:0 0 10px"></p>
+  <div class="bank" id="bank"></div>
+</section>
+
+<section class="panel">
+  <h2>آکوردهای پیشنهادی</h2>
+  <p class="hint" style="margin:0 0 10px">آکوردهایی که کاملاً از نت‌های <b class="ltr" id="chmode"></b> ساخته می‌شن، از معروف‌ترین تا پیچیده‌ترین. صدابندی‌ها برای کوک C# Standard حساب شدن؛ با فلش‌ها بینشون جابه‌جا شو. نارنجی: ریشه‌ی آکورد.</p>
+  <div class="row" id="chlv"></div>
+  <div class="row" id="chdeg" style="margin-top:8px"></div>
+  <p class="hint" id="chlvhint" style="margin:8px 0 0"></p>
+  <div class="bank" id="chcards" style="margin-top:12px"></div>
+  <h2 style="margin-top:26px">کاوشگر آکورد</h2>
+  <p class="hint" style="margin:0 0 10px">هر آکوردی رو، حتی بیرون از اسکیل فعلی، انتخاب کن تا نت‌ها، فرمول، صدابندی‌ها و رابطه‌اش با اسکیل رو ببینی.</p>
+  <div class="row">
+    <input type="text" id="cxsearch" class="namein" dir="ltr" placeholder="C#m7b5 · Asus2 · E5 · Bbmaj7" style="max-width:260px;flex:0 1 260px" aria-label="جستجوی آکورد">
+    <label class="ctl">ریشه <select id="cxroot"></select></label>
+    <label class="ctl">نوع <select id="cxtype"></select></label>
+  </div>
+  <p class="hint" id="cxhint" style="margin:6px 0 0"></p>
+  <div class="bank" id="cxout" style="margin-top:12px"></div>
+</section>
+
+<section class="panel">
+  <div class="row" style="justify-content:space-between;margin-bottom:6px">
+    <h2 style="margin:0">الگوهای اسکیل روی دسته</h2>
+    <button class="btn" id="patclear" hidden>برداشتن نمایش از دسته</button>
+  </div>
+  <div class="row" style="gap:14px;margin-bottom:8px">
+    <label class="ctl">نوع الگو
+      <select id="pattype"><option value="3">۳ نت روی هر سیم (3NPS)</option><option value="4">۴ نت روی هر سیم (4NPS)</option><option value="p">پنتاتونیک (۲ نت روی هر سیم)</option></select>
+    </label>
+    <label class="ctl">سیم شروع
+      <select id="patstr"><option value="5">سیم ۶ (بم‌ترین)</option><option value="4">سیم ۵</option><option value="3">سیم ۴</option></select>
+    </label>
+    <label class="ctl">ناحیه‌ی دسته
+      <select id="patreg"><option value="1">بالای دسته</option><option value="0">پایین دسته</option></select>
+    </label>
+    <label class="ctl">ترتیب ران
+      <select id="patord"><option value="1">خطی (نت به نت)</option><option value="3">گروه‌های ۳تایی</option><option value="4">گروه‌های ۴تایی</option></select>
+    </label>
+    <label class="ctl">جهت
+      <select id="patdir"><option value="ud">بالا و پایین</option><option value="u">فقط بالا</option><option value="d">فقط پایین</option></select>
+    </label>
+  </div>
+  <p class="hint" style="margin:0 0 12px">الگوهای <b class="ltr" id="patmode"></b>. هر الگو یک «پوزیشن» از همین اسکیله، نه یک اسکیل جدید: نت شروع فقط تعیین می‌کنه دستت کجای دسته باشه. تا وقتی نت خونه (نارنجی) همونه، اسکیل هم همونه. سیم‌ها مثل تب نوشته شدن (بالا سیم اول).</p>
+  <div class="bank" id="pats"></div>
+</section>
+
+<section class="panel">
+  <h2>کتابخانه‌ی اسکیل</h2>
+  <div id="sclbox">
+    <div class="twocol">
+      <div>
+        <div class="row" style="margin-bottom:8px">
+          <label class="ctl">ریشه <select id="sclroot"></select></label>
+          <button class="btn" id="sclplay">پخش اسکیل</button>
+          <button class="btn" id="scllab" aria-pressed="false">نمایش درجه‌ها</button>
+          <button class="btn" id="scluse" hidden>استفاده به‌عنوان مُد اصلی</button>
+        </div>
+        <div class="neck-wrap"><div class="neck" id="sclneck" aria-label="دسته‌ی اسکیل"></div></div>
+        <div class="qbox" style="text-align:start;margin-top:10px">
+          <div class="feel ltr" id="sclname" style="font-size:18px"></div>
+          <div class="hint" id="scldesc"></div>
+          <div class="nts ltr" id="sclnotes" style="margin-top:6px"></div>
+        </div>
+      </div>
+      <div class="side">
+        <input type="text" id="sclsearch" class="namein" placeholder="جستجوی اسکیل..." dir="auto" style="width:100%">
+        <div id="scllist" class="slist"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>بداهه‌نوازی روی پیشرفت</h2>
+  <div id="impbox">
+    <p class="hint" style="margin:0 0 10px">پیشرفت پخش می‌شه و نت‌های هدف هر آکورد روی دسته روشن می‌شن. روی نت‌های رنگی بایست تا تغییر آکوردها شنیده بشه؛ بقیه‌ی نت‌های اسکیل کم‌رنگ دیده می‌شن و برای گذر خوبن.</p>
+    <div class="row" id="impprog" style="margin-bottom:10px"></div>
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn primary" id="impplay">شروع</button>
+      <label class="ctl">تمپو <input type="range" id="impbpm" min="50" max="200" value="100"><span id="impbpmv" class="ltr">100</span></label>
+      <label class="ctl">هر آکورد <select id="impbars"><option value="1">۱ میزان</option><option value="2" selected>۲ میزان</option></select></label>
+      <label class="ctl">همراهی <select id="impsty"><option value="pm">پاورکورد پالم‌میوت</option><option value="arp">آرپژ</option><option value="hit">آکورد کشیده</option></select></label>
+      <label class="ctl"><input type="checkbox" id="imp7" checked> نمایش هفتم</label>
+    </div>
+    <div class="impchords" id="impchips"></div>
+    <div class="neck-wrap"><div class="neck chneck" id="impneck" aria-label="نت‌های هدف"></div></div>
+    <div class="qbox" style="text-align:start;margin-top:10px"><div class="feel" id="imptarget"></div><div class="hint" id="imptip"></div></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>میزان‌های لنگ</h2>
+  <div id="oddbox">
+    <div class="twocol">
+      <div>
+        <div class="oddhead"><div class="oddm ltr" id="oddmeter"></div><div><div class="row" id="oddgroups"></div><div class="oddcount" id="oddcount"></div></div></div>
+        <div class="ogrid" id="oddgrid" aria-label="واحدهای میزان"></div>
+        <p class="hint" style="margin:8px 0 2px"><b>حس:</b> <span id="oddfeel"></span></p>
+        <p class="hint" style="margin:0 0 10px"><b>کجا:</b> <span id="odduse"></span></p>
+        <h3 class="h3">الگوی گیتار <span class="hint">(در کلید و مُد فعلی)</span></h3>
+        <div class="row" id="oddex"></div>
+        <p class="hint" id="oddexd" style="margin:6px 0"></p>
+        <div class="tab-wrap"><div class="mtab" id="oddtab"></div></div>
+        <h3 class="h3">الگوی درام</h3>
+        <div class="row" id="odddrum" style="margin-bottom:8px"></div>
+        <div class="dgrid" id="odddgrid"></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn primary" id="oddplay">پخش</button>
+          <label class="ctl">تمپو <input type="range" id="oddbpm" min="60" max="220" value="120"><span id="oddbpmv" class="ltr">120</span></label>
+          <button class="btn" id="oddedit">باز کردن در ویرایشگر</button>
+        </div>
+        <h3 class="h3">بررسی ریف من در این کسر</h3>
+        <p class="hint" style="margin:0 0 8px">ریف ویرایشگر رو با کسر و گروه‌بندی انتخاب‌شده می‌سنجه: طول میزان‌ها، نت‌هایی که از خط میزان رد می‌شن، لهجه روی شروع گروه‌ها، و اینکه حس ریفت به کدوم گروه‌بندی نزدیک‌تره.</p>
+        <button class="btn primary" id="oddcheck">بررسی ریف ویرایشگر</button>
+        <div id="oddres" style="margin-top:10px"></div>
+      </div>
+      <div class="side">
+        <div id="oddlist" class="slist"></div>
+        <h3 class="h3">راهنمای ساختن ریف لنگ</h3>
+        <div id="oddtips"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>راهنمای مُدها</h2>
+  <div id="guidebox">
+    <p class="hint" style="margin:0 0 12px">چی واقعاً مشخص می‌کنه ریفت در یک مُد خاصه و با مُدهای دیگه قاطی نمی‌شه؟ پنج اصل، و بعد جزئیات هر مُد با شنیدن و ریف نمونه.</p>
+    <div class="gprin" id="guideprin"></div>
+    <h3 class="h3">هر مُد از نزدیک</h3>
+    <div class="row" id="guidemodes"></div>
+    <div id="guidecur" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>به سبک بندها</h2>
+  <div id="bandbox">
+    <p class="hint" style="margin:0 0 12px">برای هر بند فقط چیزهایی نوشته شده که از منابع قابل استناد (مصاحبه‌ها، نقدها، ویکی‌پدیا) پیدا شد. هر جا کوک یا مشخصاتی تأیید نشد، صریحاً نوشتم. تنظیمات پیشنهادی (مُد، تمپو، درام) پیشنهاد من بر اساس سبک بنده، نه تحلیل آهنگ خاص.</p>
+    <div class="twocol"><div id="bandcur"></div><div class="side"><div id="bandlist" class="slist"></div></div></div>
+  </div>
+</section>
+
+<section class="panel editor">
+  <div class="gtool" role="toolbar" aria-label="پخش و فایل">
+    <div class="tg">
+      <button class="pb big primary" id="play" title="پخش از مکان‌نما (Space)" aria-label="پخش">▶</button>
+      <button class="pb" id="playstart" title="پخش از اول" aria-label="پخش از اول">⏮</button>
+      <button class="pb" id="loop" aria-pressed="true" title="تکرار" aria-label="تکرار">⟲</button>
+      <button class="pb" id="metro" aria-pressed="false" title="مترونوم" aria-label="مترونوم"><svg viewBox="0 0 22 22" width="18" height="18" aria-hidden="true"><path d="M7 20 L10 3 H12 L15 20 Z M11 13 L17 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+      <button class="pb" id="follow" aria-pressed="true" title="دنبال کردن مکان پخش در تب" aria-label="دنبال کردن مکان پخش">⇥</button>
+      <select id="drums" title="درام" aria-label="درام"><option value="none">بدون درام</option><option value="rock">درام راک</option><option value="metal">دابل کیک</option><option value="gallop">درام گالاپ</option><option value="blast">بلست‌بیت</option><option value="half">هاف‌تایم</option></select>
+      <button class="pb" id="countin" aria-pressed="false" title="شمارش یک میزان قبل از شروع" aria-label="شمارش قبل از شروع"><b style="font-size:11px">1234</b></button>
+    </div>
+    <div class="tg">
+      <label class="ctl" title="تمپو">♩= <input type="number" id="bpm" min="30" max="300" value="140" class="numin"></label><span id="bpmv" hidden>140</span>
+      <label class="ctl" title="سرعت تمرین">⏱ <select id="speed"><option value="50">50%</option><option value="60">60%</option><option value="70">70%</option><option value="80">80%</option><option value="90">90%</option><option value="100" selected>100%</option><option value="120">120%</option><option value="150">150%</option></select></label><span id="speedv" hidden>100%</span>
+      <select id="tsig" title="کسر میزان" aria-label="کسر میزان"></select>
+      <select id="tone" title="صدا" aria-label="صدا"><option value="drive">دیستورشن</option><option value="od">اوردرایو</option><option value="clean">کلین</option><option value="acoustic">آکوستیک</option><option value="synth">سینت سبک</option></select>
+    </div>
+    <div class="tg">
+      <button class="pb" id="undo" title="برگشت (Ctrl+Z)" aria-label="برگشت">↶</button>
+      <button class="pb" id="redo" title="جلو (Ctrl+Y)" aria-label="جلو">↷</button>
+      <button class="pb" id="cpy" title="کپی (Ctrl+C)" aria-label="کپی">⎘</button>
+      <button class="pb" id="pst" title="چسباندن (Ctrl+V)" aria-label="چسباندن">📋</button>
+      <button class="pb" id="dups" title="تکرار انتخاب (Ctrl+D)" aria-label="تکرار انتخاب">⧉</button>
+      <button class="pb" id="delsel" title="حذف انتخاب (Shift+Delete)" aria-label="حذف انتخاب">🗑</button>
+    </div>
+    <div class="tg end">
+      <button class="pb" id="copy" title="کپی تب متنی" aria-label="کپی تب متنی">TXT</button>
+      <button class="pb" id="wipe" title="ریف جدید" aria-label="ریف جدید">✚</button>
+      <button class="pb" id="helpbtn" title="میان‌برهای صفحه‌کلید" aria-label="راهنما" aria-expanded="false">?</button>
+    </div>
+  </div>
+  <div class="palette" id="tools2" role="toolbar" aria-label="ابزار ویرایش"><div class="pg"><button class="pb" data-d="w" title="گرد (کوتاه‌تر: +، بلندتر: -)" aria-label="گرد (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="11" cy="13" rx="5" ry="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><button class="pb" data-d="h" title="سفید (کوتاه‌تر: +، بلندتر: -)" aria-label="سفید (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="9" cy="16" rx="4.2" ry="3" fill="none" stroke="currentColor" stroke-width="1.6" transform="rotate(-20 9 16)"/><line x1="12.8" y1="15" x2="12.8" y2="3" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="pb" data-d="q" title="سیاه (کوتاه‌تر: +، بلندتر: -)" aria-label="سیاه (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="9" cy="16" rx="4.2" ry="3" fill="currentColor" stroke="currentColor" stroke-width="1.6" transform="rotate(-20 9 16)"/><line x1="12.8" y1="15" x2="12.8" y2="3" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="pb" data-d="8" title="چنگ (کوتاه‌تر: +، بلندتر: -)" aria-label="چنگ (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="9" cy="16" rx="4.2" ry="3" fill="currentColor" stroke="currentColor" stroke-width="1.6" transform="rotate(-20 9 16)"/><line x1="12.8" y1="15" x2="12.8" y2="3" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 3 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="pb" data-d="16" title="دولاچنگ (کوتاه‌تر: +، بلندتر: -)" aria-label="دولاچنگ (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="9" cy="16" rx="4.2" ry="3" fill="currentColor" stroke="currentColor" stroke-width="1.6" transform="rotate(-20 9 16)"/><line x1="12.8" y1="15" x2="12.8" y2="3" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 3 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 7 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="pb" data-d="32" title="سه‌لاچنگ (کوتاه‌تر: +، بلندتر: -)" aria-label="سه‌لاچنگ (کوتاه‌تر: +، بلندتر: -)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><ellipse cx="9" cy="16" rx="4.2" ry="3" fill="currentColor" stroke="currentColor" stroke-width="1.6" transform="rotate(-20 9 16)"/><line x1="12.8" y1="15" x2="12.8" y2="3" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 3 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 7 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12.8 11 q5 2.5 3 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button><button class="pb" id="tdot" title="نقطه‌دار (.)" aria-label="نقطه‌دار (.)"><b>•</b></button><button class="pb" id="ttri" title="تریوله (T)" aria-label="تریوله (T)"><b>3</b></button></div><div class="pg"><button class="pb" id="trest" title="سکوت (R)" aria-label="سکوت (R)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><path d="M9 3 L14 9 L9 13 L14 19 Q6 16 10 21" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button><button class="pb" id="tchord" title="حالت آکورد: چند نت در یک خانه (C)" aria-label="حالت آکورد: چند نت در یک خانه (C)"><svg viewBox="0 0 22 22" width="20" height="20" aria-hidden="true"><circle cx="11" cy="6" r="2.6" fill="currentColor"/><circle cx="11" cy="11.5" r="2.6" fill="currentColor"/><circle cx="11" cy="17" r="2.6" fill="currentColor"/></svg></button><button class="pb" id="tpc" title="پاورکورد" aria-label="پاورکورد"><b>5</b></button><button class="pb" id="tmaj" title="آکورد ماژور (ریشه روی سیم ۶ یا ۵)" aria-label="آکورد ماژور (ریشه روی سیم ۶ یا ۵)"><b>M</b></button><button class="pb" id="tmin" title="آکورد مینور (ریشه روی سیم ۶ یا ۵)" aria-label="آکورد مینور (ریشه روی سیم ۶ یا ۵)"><b>m</b></button></div><div class="pg"><button class="pb" data-lg="h" title="هامر-آن / پول-آف به نت بعد (H)" aria-label="هامر-آن / پول-آف به نت بعد (H)">H/P</button><button class="pb" data-lg="sl" title="اسلاید لگاتو به نت بعد (S)" aria-label="اسلاید لگاتو به نت بعد (S)">sl</button><button class="pb" data-lg="ss" title="اسلاید شیفت به نت بعد" aria-label="اسلاید شیفت به نت بعد">S</button><button class="pb" data-t="tie" title="تای: ادامه‌ی نت قبل" aria-label="تای: ادامه‌ی نت قبل">⌒</button></div><div class="pg"><button class="pb" data-sin="b" title="اسلاید از پایین به نت" aria-label="اسلاید از پایین به نت">╱•</button><button class="pb" data-sin="a" title="اسلاید از بالا به نت" aria-label="اسلاید از بالا به نت">╲•</button><button class="pb" data-sout="d" title="اسلاید به بیرون، پایین" aria-label="اسلاید به بیرون، پایین">•╲</button><button class="pb" data-sout="u" title="اسلاید به بیرون، بالا" aria-label="اسلاید به بیرون، بالا">•╱</button></div><div class="pg"><button class="pb" data-bt="b" title="بند (B)" aria-label="بند (B)">b↑</button><button class="pb" data-bt="br" title="بند و رها" aria-label="بند و رها">b↑↓</button><button class="pb" data-bt="pb" title="پری‌بند و رها" aria-label="پری‌بند و رها">pb↓</button><select id="bendamt" class="pbsel" title="مقدار بند" aria-label="مقدار بند"><option value="1">½</option><option value="2" selected>1</option><option value="3">1½</option><option value="4">2</option></select><button class="pb" data-t="vib" title="ویبراتو (V)" aria-label="ویبراتو (V)">〰</button></div><div class="pg"><button class="pb" data-t="pm" title="پالم‌میوت (P)" aria-label="پالم‌میوت (P)">PM</button><button class="pb" data-t="ring" title="لت رینگ (L)" aria-label="لت رینگ (L)">LR</button><button class="pb" data-t="dead" title="دد نوت (X)" aria-label="دد نوت (X)">×</button><button class="pb" data-t="ghost" title="گوست نوت (G)" aria-label="گوست نوت (G)">( )</button><button class="pb" data-t="acc" title="آکسنت" aria-label="آکسنت">&gt;</button><button class="pb" data-t="stac" title="استاکاتو" aria-label="استاکاتو">·</button></div><div class="pg"><button class="pb" data-harm="nh" title="هارمونیک طبیعی" aria-label="هارمونیک طبیعی">&lt;&gt;</button><button class="pb" data-harm="ah" title="پینچ هارمونیک" aria-label="پینچ هارمونیک">PH</button><button class="pb" data-t="tap" title="تپینگ" aria-label="تپینگ">T</button><button class="pb" data-t="trem" title="ترمولو پیکینگ" aria-label="ترمولو پیکینگ">≡</button></div><div class="pg"><button class="pb" id="tdup" title="تکرار خانه" aria-label="تکرار خانه">⧉</button><button class="pb" id="tins" title="درج خانه (Insert)" aria-label="درج خانه (Insert)">+▯</button><button class="pb" id="tdel" title="حذف خانه (Shift+Delete)" aria-label="حذف خانه (Shift+Delete)">−▯</button></div></div>
+  <div class="titlerow">
+    <input id="rname" type="text" maxlength="60" placeholder="عنوان ریف" class="namein titlein" aria-label="عنوان ریف">
+    <button class="btn primary" id="saveb">ذخیره</button>
+    <button class="btn" id="saveas" hidden>ذخیره به‌عنوان جدید</button>
+    <button class="btn" id="dl" hidden>دانلود .txt</button>
+  </div>
+  <div class="helppop" id="helppop" hidden></div>
+  <div class="rstat" id="rstat"></div>
+  <div class="tab-wrap staffwrap"><div class="staff" id="tab"></div></div>
+  <div class="rneckwrap">
+    <div class="hint neckcap">برای نوشتن روی دسته کلیک کن؛ یا روی تب کلیک کن و عدد فرت رو تایپ کن.</div>
+    <div class="neck-wrap"><div class="neck" id="rneck" aria-label="دسته برای نوشتن ریف"></div></div>
+  </div>
+</section>
+
+
+<section class="panel">
+  <div class="row" style="justify-content:space-between;margin-bottom:8px">
+    <h2 style="margin:0">ریف‌های ذخیره‌شده</h2>
+    <span class="hint" id="storeline">ذخیره در همین مرورگر</span>
+  </div>
+  <p class="hint" id="curline" style="margin:8px 0 0"></p>
+  <ul class="lib" id="lib"></ul>
+  <h2 style="margin-top:24px">نمونه‌ها و درس‌ها</h2>
+  <p class="hint" style="margin:0 0 10px">ریف‌های آماده برای شنیدن، تمرین و ویرایش. همه در کلید C#.</p>
+  <div class="bank" id="presetcards"></div>
+  <select id="preset" hidden>
+    <option value="gallop">گالاپ Aeolian روی پدال</option><option value="lead">ملودی لید حماسی</option><option value="chords">پاورکورد C#5 A5 E5 B5</option><option value="phr">ریف تاریک Phrygian</option><option value="hm">هارمونیک مینور با B#</option>
+  </select>
+</section>
+
+<section class="panel">
+  <h2>بررسی حال‌وهوا</h2>
+  <div class="an">
+    <div>
+      <div class="score" id="score">–<small> / ۱۰۰</small></div>
+      <div class="bar"><i id="barfill"></i></div>
+      <div class="verdict" id="verdict"></div>
+      <p class="hint" id="keyline"></p>
+    </div>
+    <ul class="checks" id="checks"></ul>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>تشخیص اسکیل</h2>
+  <p class="hint" style="margin:0 0 12px">نت‌های یک ریف یا تیکه‌ی سولو رو بده تا محتمل‌ترین اسکیل‌ها رو با درصد اطمینان ببینی. هر چی تیکه کامل‌تر باشه (با نت آخر) و نت بیس زیرش رو مشخص کنی، جواب دقیق‌تره.</p>
+  <div class="row" id="rzmodes" style="margin-bottom:10px">
+    <button class="chip" data-m="neck" aria-pressed="true">روی دسته</button>
+    <button class="chip" data-m="notes" aria-pressed="false">اسم نت‌ها</button>
+    <button class="chip" data-m="tab" aria-pressed="false">تب (فرت‌ها)</button>
+    <button class="chip" data-m="riff" aria-pressed="false">ریف فعلی برنامه</button>
+  </div>
+  <div id="rz-neck">
+    <div class="neck-wrap"><div class="neck" id="rzneck" aria-label="دسته برای وارد کردن نت‌ها"></div></div>
+    <p class="hint" style="margin:6px 0 8px">به همون ترتیبی که می‌زنی روی دسته کلیک کن؛ هر جای دسته، هر تعداد نت روی هر سیم. تکرار نت‌ها هم مهمه، چون نت‌هایی که بیشتر می‌زنی وزن بیشتری دارن. تشخیص با هر کلیک به‌روز می‌شه.</p>
+    <div class="rzseq" id="rzseq"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="rzundo">حذف آخرین نت</button>
+      <button class="btn" id="rzclear">پاک کردن همه</button>
+      <button class="btn" id="rzplay">پخش به ترتیب</button>
+      <button class="btn" id="rzmake">ساختن ریف از این نت‌ها</button>
+      <label class="ctl"><input type="checkbox" id="rzshow" checked> نمایش اسکیل پیشنهادی روی دسته</label>
+    </div>
+  </div>
+  <div id="rz-notes" hidden>
+    <textarea id="rznotes" class="rzta" rows="2" dir="ltr" placeholder="C# D# E F# G# A B# C#"></textarea>
+  </div>
+  <div id="rz-tab" hidden>
+    <textarea id="rztab" class="rzta" rows="6" dir="ltr" placeholder="8 10 12&#10;9 10 12&#10;9 10 12&#10;9 11 12&#10;10 12 13&#10;10 12 14"></textarea>
+    <label class="ctl" style="margin-top:6px">خط اول تب
+      <select id="rzorder"><option value="low">سیم ۶ (بم‌ترین)</option><option value="high">سیم ۱ (زیرترین)</option></select>
+    </label>
+    <p class="hint" style="margin:4px 0 0">هر خط یک سیم، فرت‌ها با فاصله. اگه سیمی رو نزدی می‌تونی شماره‌ی سیم رو اول خط بنویسی، مثل <span class="ltr">4: 9 10 12</span>.</p>
+  </div>
+  <div id="rz-riff" hidden><p class="hint" style="margin:0">نت‌های ریفی که بالا نوشتی، با ریتم و ضرب‌های قوی‌اش، بررسی می‌شن.</p></div>
+  <div class="row" style="margin-top:10px">
+    <label class="ctl">نت بیس یا پدال زیرش
+      <select id="rzhome"><option value="-1">نمی‌دونم / نداره</option></select>
+    </label>
+    <button class="btn primary" id="rzgo">تشخیص بده</button>
+  </div>
+  <div id="rzout" style="margin-top:14px"></div>
+</section>
+  </main>
+ </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="js/core/constants.js"></script>
+<script src="js/i18n/translations.js"></script>
+<script src="js/i18n/i18n.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/rhythm.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/audio/engine.js"></script>
+<script src="js/audio/sample-manifest.js"></script>
+<script src="js/audio/samples.js"></script>
+<script src="js/audio/transport.js"></script>
+<script src="js/editor/fretboard.js"></script>
+<script src="js/editor/tab.js"></script>
+<script src="js/theory/analysis.js"></script>
+<script src="js/theory/key.js"></script>
+<script src="js/editor/editing.js"></script>
+<script src="js/editor/presets.js"></script>
+<script src="js/editor/controls.js"></script>
+<script src="js/banks/progressions.js"></script>
+<script src="js/banks/chords.js"></script>
+<script src="js/theory/scale-patterns.js"></script>
+<script src="js/theory/scale-recognizer.js"></script>
+<script src="js/library/riff-library.js"></script>
+<script src="js/trainers/progress.js"></script>
+<script src="js/app/home.js"></script>
+<script src="js/trainers/looper.js"></script>
+<script src="js/trainers/speed.js"></script>
+<script src="js/trainers/fretboard-quiz.js"></script>
+<script src="js/trainers/rhythm.js"></script>
+<script src="js/trainers/ear.js"></script>
+<script src="js/trainers/sight-reading.js"></script>
+<script src="js/trainers/scale-library.js"></script>
+<script src="js/trainers/improv.js"></script>
+<script src="js/app/command-palette.js"></script>
+<script src="js/trainers/wiring.js"></script>
+<script src="js/odd-meters.js"></script>
+<script src="js/theory/ideas.js"></script>
+<script src="js/theory/mode-guide.js"></script>
+<script src="js/band.js"></script>
+<script src="js/app/shell.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
