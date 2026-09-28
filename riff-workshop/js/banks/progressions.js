@@ -59,13 +59,16 @@ function triad(mk,j){var iv=MODES[mk].iv,nm=spell(iv);
   var q=t3===4&&t5===7?'maj':t3===3&&t5===7?'min':t3===3&&t5===6?'dim':t3===4&&t5===8?'aug':'other';
   var root=nm[j],name=root+(q==='min'?'m':q==='dim'?'dim':q==='aug'?'aug':'');
   var r=ROMAN[j];r=(q==='min'||q==='dim')?r.toLowerCase():r;r+=q==='dim'?'°':q==='aug'?'+':'';
-  return {name:name,rn:r,q:q,pc:(S.key+a)%12,tones:[nm[j],nm[(j+2)%7],nm[(j+4)%7]]};}
+  return {name:name,rn:r,q:q,pc:(S.key+a)%12,tones:[nm[j],nm[(j+2)%7],nm[(j+4)%7]],pcs:[a,b,c].map(function(x){return (S.key+x)%12;})};}
+// آکورد پیشرفت به‌صورت صدابندی قابل‌اجرا (برای ایده‌ها)
+function triadVoicing(ch){var V=solveVoicings(ch.pc,CTI[ch.q==='min'?'min':ch.q==='dim'?'dim':ch.q==='aug'?'aug':'maj'],'full');return V.length?V[0].notes:null;}
 function placeChord(ch){var lf=(ch.pc-1+12)%12;var pos=lf<=7?{s:5,f:lf}:{s:4,f:(ch.pc-6+12)%12};
   pos.power=(ch.q==='maj'||ch.q==='min');return pos;}
 function renderBank(){
   var sel=$('style');if(!sel.options.length){Object.keys(STYLES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=STYLES[k].name;sel.appendChild(o);});sel.value=curStyle;}
   $('bankmode').textContent=MN();
   if($('bankinfo'))$('bankinfo').innerHTML='<b>'+STYLES[curStyle].name+':</b> '+STYLES[curStyle].tech+' <br>این پیشرفت‌ها فقط از آکوردهای خود مُد ساخته شدن و الگوهای رایج هارمونی این سبک‌ان؛ به آهنگ خاصی نسبت داده نشدن. «ساختن ریف» ریتم مخصوص همین سبک رو می‌سازه.'+(STYLES[curStyle].prog[S.mode]?'':'<br>برای <span class="ltr">'+MODES[S.mode].n+'</span> الگوی درجه‌ها از <span class="ltr">'+MODES[MODES[S.mode].base].n+'</span> گرفته شده و آکوردها از خود این اسکیل ساخته می‌شن.');
+  if($('bankinfo'))$('bankinfo').innerHTML='<b>'+STYLES[curStyle].name+':</b> '+STYLES[curStyle].tech+' <br>این پیشرفت‌ها فقط از آکوردهای خود مُد ساخته شدن و الگوهای رایج هارمونی این سبک‌ان؛ به آهنگ خاصی نسبت داده نشدن. «ساختن ریف» ریتم مخصوص همین سبک رو می‌سازه. روی هر آکورد بزن تا ۸ ریف و سولو برای همون آکورد ببینی.';
   var box=$('bank');box.innerHTML='';
   var list=(STYLES[curStyle].prog[S.mode])||(STYLES[curStyle].prog[MODES[S.mode].base])||[];
   list.forEach(function(p){
@@ -73,7 +76,12 @@ function renderBank(){
     var c=document.createElement('div');c.className='pcard';
     var rn=document.createElement('div');rn.className='rn';rn.textContent=chords.map(function(x){return x.rn;}).join(' – ');c.appendChild(rn);
     var chs=document.createElement('div');chs.className='chs';
-    chords.forEach(function(x){var sp=document.createElement('span');sp.textContent=x.name;sp.title=x.tones.join(' ');if(x.pc===S.key)sp.className='home';chs.appendChild(sp);});
+    var ideas=null;
+    chords.forEach(function(x){var sp=document.createElement('button');sp.type='button';sp.textContent=x.name;sp.title=x.tones.join(' ')+' — ۸ ریف و سولو';if(x.pc===S.key)sp.className='home';
+      sp.onclick=function(){var was=sp.getAttribute('aria-pressed')==='true';chs.querySelectorAll('button').forEach(function(o){o.setAttribute('aria-pressed','false');});if(ideas){ideas.remove();ideas=null;}
+        if(was)return;sp.setAttribute('aria-pressed','true');ideas=EL('div','bankideas');ideas.appendChild(EL('div','hint','ایده‌ها برای <b class="ltr">'+x.name+'</b> ('+x.rn+'):'));
+        ideas.appendChild(chordIdeaRow(function(){return triadVoicing(x);},x.pc,x.pcs,x.name));chs.after(ideas);};
+      chs.appendChild(sp);});
     c.appendChild(chs);
     var f=document.createElement('div');f.className='feel';f.textContent=p[1];c.appendChild(f);
     var t=document.createElement('div');t.className='tip';t.textContent='کجا: '+p[2];c.appendChild(t);

@@ -428,3 +428,10 @@ kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-botto
 .oddlive b.on{color:var(--lantern)}
 .oddlive span{font-size:20px;font-weight:700}
 .oddlive small{color:var(--muted)}
+/* progression chords are buttons that open 8 riff/solo ideas */
+.pcard .chs button{font:inherit;font-size:13px;font-weight:700;padding:2px 9px;border-radius:6px;background:var(--surface2);color:var(--ink);border:1px solid transparent;cursor:pointer}
+.pcard .chs button.home{background:var(--lantern);color:var(--lanternInk)}
+.pcard .chs button[aria-pressed="true"]{border-color:var(--ink)}
+.pcard .chs button:focus-visible{outline:2px solid var(--lantern);outline-offset:2px}
+.bankideas{margin-top:8px;padding-top:6px;border-top:1px dashed var(--line)}
+.chideas .idearow+.idearow{margin-top:4px}
