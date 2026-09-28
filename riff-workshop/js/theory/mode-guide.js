@@ -15,7 +15,7 @@ var MGP=[['۱. خونه رو تثبیت کن','نت خونه باید «بیشت
  ['۴. روی خونه‌ی نسبی نایست','همه‌ی مُدهای یک خانواده نت‌های یکسان دارن. اگه جمله‌هات روی آکورد III تموم بشن، Aeolian مثل ماژور نسبی شنیده می‌شه. پایان رو به خونه برگردون.'],
  ['۵. با بررسی‌کننده بسنج','ریف رو در ویرایشگر بنویس و «بررسی حال‌وهوا» رو باز کن: اگه مرکز تونال، نت‌های امضا و تأکید روی خونه هر سه سبز باشن، ریفت واقعاً در همون مُده.']];
 var GUIDE={m:null};
-function guideRender(){var box=$('guidebox');if(!box)return;var m=GUIDE.m||S.mode,G=MG[m],iv=MODES[m].iv,names=spellAny(S.key,iv).notes,dl=dlab(iv);
+function guideRender(){var box=$('guidebox');if(!box)return;var m=GUIDE.m||(MG[S.mode]?S.mode:MODES[S.mode].base),G=MG[m],iv=MODES[m].iv,names=spellAny(S.key,iv).notes,dl=dlab(iv);
   var ch=$('guidemodes');ch.innerHTML='';ORDER.forEach(function(k){var b=EL('button','chip','<span class="ltr">'+MODES[k].n+'</span>');b.setAttribute('aria-pressed',k===m);b.onclick=function(){GUIDE.m=k;guideRender();};ch.appendChild(b);});
   var sigIv=iv[G.sig],rows='<div class="gcard"><div class="gm ltr">'+spellAny(S.key,iv).root+' '+MODES[m].n+'</div><div class="hint">'+MODES[m].mood+'</div>'+
     '<div class="nts ltr" style="margin:8px 0">'+iv.map(function(x,k){return '<span class="'+(k===0?'rt':k===G.sig?'sg':'')+'">'+names[k]+'<small>'+dl[k]+'</small></span>';}).join('')+'</div>'+

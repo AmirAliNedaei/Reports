@@ -22,7 +22,8 @@ function analyze(){
   if(!count)return null;
   var rel=[];for(var p=0;p<12;p++)rel[(p-S.key+12)%12]=hist[p];
   var used=[];for(p=0;p<12;p++)if(hist[p]>0)used.push((p-S.key+12)%12);
-  var compat=ORDER.filter(function(k){return used.every(function(iv){return MODES[k].iv.indexOf(iv)>=0;});});
+  var compat=ORDER.concat(MODEKEYS.filter(function(k){return ORDER.indexOf(k)<0;})).filter(function(k){return used.every(function(iv){return MODES[k].iv.indexOf(iv)>=0;});});
+  if(compat.length>10)compat=compat.filter(function(k,i){return i<9||k===S.mode;}).slice(0,10);
   var keys=keyFind(hist),best=keys[0];
   var rank=-1;for(var r=0;r<keys.length;r++){if(keys[r].t===S.key&&keys[r].q===m.q){rank=r;break;}}
   var anyC=keys[0].t===S.key||keys[1].t===S.key;

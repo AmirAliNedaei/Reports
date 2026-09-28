@@ -8,7 +8,7 @@ var PAGES=[
  {id:'ear',g:'تمرین',t:'تمرین گوش',d:'بشنو و اسمش رو بگو: فاصله، آکورد، درجه، مُد و پیشرفت.',ic:'◐',secs:['earbox']},
  {id:'sight',g:'تمرین',t:'نت‌خوانی',d:'خوندن نت روی حامل، یکی یکی تا وقتی آنی بشه.',ic:'♩',secs:['sightbox']},
  {id:'neck',g:'کاوش',t:'دسته و الگوها',d:'اسکیل فعلی روی کل دسته و الگوهای اجرایی‌اش.',ic:'▤',secs:['neck','pats']},
- {id:'scl',g:'کاوش',t:'کتابخانه‌ی اسکیل',d:'۴۱ اسکیل در ۱۲ کلید، روی دسته و با صدا.',ic:'△',secs:['sclbox']},
+ {id:'scl',g:'کاوش',t:'اسکیل‌ها و مُدها',d:'۴۸ اسکیل در ۱۲ کلید، روی دسته و با صدا؛ هر کدوم رو می‌شه مُد اصلی برنامه کرد.',ic:'△',secs:['sclbox']},
  {id:'chords',g:'کاوش',t:'آکوردها',d:'آکوردهای اسکیل از ساده تا پیچیده، با صدابندی‌ها و کاوشگر.',ic:'◆',secs:['chcards']},
  {id:'bank',g:'کاوش',t:'پیشرفت‌های آکورد',d:'پیشرفت‌های سبک برای هر مُد؛ بشنو و ازشون ریف بساز.',ic:'≡',secs:['bank']},
  {id:'odd',g:'کاوش',t:'میزان‌های لنگ',d:'کسرهای ۵/۸ تا ۱۷/۸ با گروه‌بندی، الگوی گیتار و درام، و بررسی ریف تو.',ic:'⅞',secs:['oddbox']},
@@ -36,6 +36,7 @@ function goPage(id){
   if(id==='home')renderHome();
   if(id==='editor'){buildTab();refreshNeck();}
   if(id==='lib')renderPresetCards();
+  if(id==='scl'){sclSync();sclRender();}
   if(typeof I18N!=='undefined')I18N.apply(document.body);
 }
 function reveal(el,block){var pg=el.closest('.page');if(pg&&pg.getAttribute('data-page')!==curPage)goPage(pg.getAttribute('data-page'));

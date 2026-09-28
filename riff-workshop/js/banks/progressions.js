@@ -65,9 +65,9 @@ function placeChord(ch){var lf=(ch.pc-1+12)%12;var pos=lf<=7?{s:5,f:lf}:{s:4,f:(
 function renderBank(){
   var sel=$('style');if(!sel.options.length){Object.keys(STYLES).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=STYLES[k].name;sel.appendChild(o);});sel.value=curStyle;}
   $('bankmode').textContent=MN();
-  if($('bankinfo'))$('bankinfo').innerHTML='<b>'+STYLES[curStyle].name+':</b> '+STYLES[curStyle].tech+' <br>این پیشرفت‌ها فقط از آکوردهای خود مُد ساخته شدن و الگوهای رایج هارمونی این سبک‌ان؛ به آهنگ خاصی نسبت داده نشدن. «ساختن ریف» ریتم مخصوص همین سبک رو می‌سازه.';
+  if($('bankinfo'))$('bankinfo').innerHTML='<b>'+STYLES[curStyle].name+':</b> '+STYLES[curStyle].tech+' <br>این پیشرفت‌ها فقط از آکوردهای خود مُد ساخته شدن و الگوهای رایج هارمونی این سبک‌ان؛ به آهنگ خاصی نسبت داده نشدن. «ساختن ریف» ریتم مخصوص همین سبک رو می‌سازه.'+(STYLES[curStyle].prog[S.mode]?'':'<br>برای <span class="ltr">'+MODES[S.mode].n+'</span> الگوی درجه‌ها از <span class="ltr">'+MODES[MODES[S.mode].base].n+'</span> گرفته شده و آکوردها از خود این اسکیل ساخته می‌شن.');
   var box=$('bank');box.innerHTML='';
-  var list=(STYLES[curStyle].prog[S.mode])||[];
+  var list=(STYLES[curStyle].prog[S.mode])||(STYLES[curStyle].prog[MODES[S.mode].base])||[];
   list.forEach(function(p){
     var chords=p[0].map(function(j){return triad(S.mode,j);});
     var c=document.createElement('div');c.className='pcard';

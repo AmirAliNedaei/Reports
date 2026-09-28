@@ -30,8 +30,8 @@ function refreshNeck(){
   S.events.forEach(function(e,i){if(!e.rest)e.notes.forEach(function(p){used[p.s+':'+p.f]=1;if(i===S.cur)cur[p.s+':'+p.f]=1;});});
   document.querySelectorAll('#neck .cell, #rneck .cell').forEach(function(c){
     var s=+c.dataset.s,f=+c.dataset.f,m=midiAt(s,f),d=c.querySelector('.dot'),k=s+':'+f,ed=!!c.closest('#rneck');
-    var ins=inScale(m),root=ivOf(m)===0,u=ed&&used[k];
-    d.className='dot '+(ins?(root?'root':'scale'):(u?'bad':'ghost'));
+    var ins=inScale(m),root=ivOf(m)===0,u=ed&&used[k],L=lensIv(),inl=L&&L.indexOf(ivOf(m))>=0;
+    d.className='dot '+((ins||inl)?(root?'root':'scale'):(u?'bad':'ghost'));if(L&&ins&&!inl)d.classList.add('faded');
     if(u)d.classList.add('used');if(ed&&cur[k])d.classList.add('cur');
     if(activePat&&activePat.mode===S.mode&&activePat.key===S.key){if(pset[k])d.classList.add('pat');else if(ins)d.classList.add('faded');}
     d.textContent=label(m);
