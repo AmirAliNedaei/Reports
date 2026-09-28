@@ -74,8 +74,6 @@ python3 -m http.server 8000
 | `js/app/command-palette.js` | پالت فرمان (Ctrl+K) و جست‌وجوی آکورد |
 | `js/trainers/wiring.js` | اتصال رابط کاربری ترینرها |
 | `js/odd-meters.js` | **میزان‌های لنگ**: ۳۶ کسر در `ODD` (با `/4`، `/8` و `/16`)، ۸ الگوی گیتار برای هر گروه‌بندی (`oddRiffs`)، شمارنده‌ی زنده (`oddLive`) و بررسی ریف (`oddCheck`) |
-| `js/theory/ideas.js` | ایده‌های ریف |
-| `js/odd-meters.js` | **میزان‌های لنگ** (۵/۸ تا ۱۷/۸) |
 | `js/theory/ideas.js` | ایده‌های ریف و سولو: برای هر آکورد ۸ ایده (`CHIDEAS` و `chordIdeas`: ۴ ریف و ۴ سولو)، در صفحه‌ی آکوردها و با کلیک روی آکوردهای پیشرفت‌ها (`chordIdeaRow`) |
 | `js/theory/mode-guide.js` | راهنمای هویت مدها |
 | `js/band.js` | **به سبک بندها** |
