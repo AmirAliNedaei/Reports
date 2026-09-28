@@ -1,0 +1,5 @@
+Electric guitar DI samples
+Source: Karoryfer Samples – Emilyguitar (Epiphone Emily the Strange, played and mapped by D. Smolken)
+https://github.com/sfzinstruments/karoryfer.emilyguitar
+License: CC0 1.0 Universal (public domain dedication)
+Converted to mono 96 kbps MP3 (trimmed to 3 s, loudness-normalised) with tools/convert_di_samples.py

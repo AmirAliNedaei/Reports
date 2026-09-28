@@ -1,11 +1,12 @@
 /* بانک نمونه‌های صدای گیتار واقعی (mp3های پوشه‌ی samples/) */
 /* ---------- sample bank (real guitar recordings) ---------- */
 var sbus=null,SBUF={},SBLOAD={},SBTOLD=false;
-var TONEMAP={drive:{main:'dist',pm:'dist',pmf:1500,pmdec:0.07},od:{main:'od',pm:'od',pmf:1600,pmdec:0.07},clean:{main:'clean',pm:'mute'},acoustic:{main:'acou',pm:'acou',pmf:2200,pmdec:0.09},synth:{}};
-var SBG={dist:0.5,od:0.55,clean:0.95,mute:1.1,acou:1.0,harm:0.85};
+var TONEMAP={drive:{main:'di'},od:{main:'di'},clean:{main:'di'},acoustic:{main:'acou',pm:'acou',pmf:2200,pmdec:0.09},synth:{}};
+var SBG={acou:1.0,harm:0.85};
 /* mp3ها با fetch خونده می‌شن؛ اگه نشد (مثلاً باز کردن فایل با file://) بی‌صدا رد می‌شه و سنتز جایگزین پخش می‌کنه */
-function sbFetch(inst,m){if(typeof fetch!=='function')return Promise.reject();
-  return fetch(SAMPLE_DIR+inst+'/'+m+'.mp3').then(function(r){if(!r.ok)throw new Error(r.status);return r.arrayBuffer();});}
+function sbFetchUrl(url){if(typeof fetch!=='function')return Promise.reject();
+  return fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.arrayBuffer();});}
+function sbFetch(inst,m){return sbFetchUrl(SAMPLE_DIR+inst+'/'+m+'.mp3');}
 function sbLoad(inst){
   if(!ac||typeof SAMPLES==='undefined'||!SAMPLES[inst]||typeof ac.decodeAudioData!=='function')return Promise.resolve();
   if(SBLOAD[inst])return SBLOAD[inst];SBUF[inst]={};
@@ -15,21 +16,65 @@ function sbLoad(inst){
 function sbGet(inst,midi){var B=SBUF[inst];if(!B)return null;var best=null,bd=99;for(var k in B){var d=Math.abs(+k-midi);if(d<bd){bd=d;best=+k;}}
   return best===null||bd>6?null:{buf:B[best],rate:Math.pow(2,(midi-best)/12)};}
 function sbPrime(){var T=TONEMAP[S.tone]||TONEMAP.drive;if(!T.main)return;
-  var first=!SBLOAD[T.main];
-  Promise.all([sbLoad(T.main),sbLoad(T.pm)]).then(function(){if(first&&!SBTOLD&&SBUF[T.main]&&Object.keys(SBUF[T.main]).length){SBTOLD=true;toast('صدای واقعی گیتار آماده‌ست');}
-    setTimeout(function(){sbLoad('harm');sbLoad('clean');sbLoad('mute');},300);});}
+  var di=T.main==='di',first=di?!DILOAD:!SBLOAD[T.main];
+  (di?diLoad():Promise.all([sbLoad(T.main),sbLoad(T.pm)])).then(function(){
+    var ok=di?DIREADY:(SBUF[T.main]&&Object.keys(SBUF[T.main]).length);
+    if(first&&!SBTOLD&&ok){SBTOLD=true;toast('صدای واقعی گیتار آماده‌ست');}
+    setTimeout(function(){sbLoad('harm');diLoad();},300);});}
+
+/* ---------- DI guitar samples (Karoryfer Emilyguitar, CC0) through the amp simulator ---------- */
+// نمونه‌ها صدای خشک گیتارن (بدون آمپ)؛ دیستورشن زنده در amp.js ساخته می‌شه.
+// اول برداشت اول لایه‌ی mf همه‌ی نت‌ها لود می‌شه تا زود قابل پخش باشه، بقیه پشت صحنه.
+var DIBUF={},DIMUTE=[],DILOAD=null,DIREADY=false,DIRR=0,DIG=0.8;
+function diOn(){return !!(AMP&&DIREADY&&ampMode());}
+function diDecode(url){return sbFetchUrl(url).then(function(buf){return new Promise(function(res,rej){var r=ac.decodeAudioData(buf,res,rej);if(r&&r.catch)r.catch(rej);});});}
+function diFiles(){var M=DI_SAMPLES,L=[];M.notes.forEach(function(n){L.push([n,'mf',1]);});
+  Object.keys(M.layers).forEach(function(lay){for(var r=1;r<=M.layers[lay];r++)M.notes.forEach(function(n){if(lay!=='mf'||r!==1)L.push([n,lay,r]);});});
+  return L;}
+function diLoad(){
+  if(!ac||typeof DI_SAMPLES==='undefined'||typeof ac.decodeAudioData!=='function')return Promise.resolve();
+  if(DILOAD)return DILOAD;
+  var F=diFiles(),nn=DI_SAMPLES.notes.length;
+  function one(f){return diDecode(SAMPLE_DIR+'di/'+f[0]+'_'+f[1]+'_'+f[2]+'.mp3').then(function(b){var d=DIBUF[f[0]]=DIBUF[f[0]]||{};(d[f[1]]=d[f[1]]||[]).push(b);},function(){});}
+  DILOAD=Promise.all(F.slice(0,nn).map(one)).then(function(){DIREADY=Object.keys(DIBUF).length>0;if(!DIREADY)return;
+    for(var k=1;k<=DI_SAMPLES.mutes;k++)diDecode(SAMPLE_DIR+'di/mute_'+k+'.mp3').then(function(b){DIMUTE.push(b);},function(){});
+    var rest=F.slice(nn),i=0;(function next(){if(i>=rest.length)return;var b=rest.slice(i,i+12);i+=12;Promise.all(b.map(one)).then(next);})();});
+  return DILOAD;}
+function diGet(midi,lay){var best=null,bd=99;for(var k in DIBUF){var d=Math.abs(+k-midi);if(d<bd){bd=d;best=+k;}}
+  if(best===null||bd>6)return null;var L=DIBUF[best],order=[lay,'mf','f','mp'];
+  for(var i=0;i<order.length;i++){var a=L[order[i]];if(a&&a.length){DIRR++;return {buf:a[DIRR%a.length],rate:Math.pow(2,(midi-best)/12)};}}
+  return null;}
+function diLayer(g){return g>=1?'f':(g>=0.5?'mf':'mp');}
+// در درایو و اوردرایو هر نت دو بار با دو برداشت مختلف زده می‌شه (چپ و راست) مثل ضبط استودیویی ریف متال
+function diChains(){return S.tone==='clean'?[AMP.c]:[AMP.l,AMP.r];}
+function diVoice(midi,t,o){
+  var s=AMPSET[ampMode()],ch=diChains(),lay=diLayer(o.gain),played=false;
+  ch.forEach(function(chain,i){var smp=diGet(midi,lay);if(!smp)return;played=true;
+    var t1=t+(i?0.004+Math.random()*0.008:0);
+    var src=ac.createBufferSource(),g=ac.createGain(),node=src,gn=o.gain*DIG;src.buffer=smp.buf;
+    if(o.pm){var lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=s.pmf;lp.Q.value=0.7;src.connect(lp);node=lp;}
+    node.connect(g);g.connect(chain.in);g.gain.value=gn;g.gain.setValueAtTime(gn,t1);
+    if(o.pm)g.gain.setTargetAtTime(0.0001,t1+0.03,s.pmdec);
+    vfinish(src,g,smp.rate,t1,o,gn);});
+  return played;}
+function diDead(t,g0){var s=AMPSET[ampMode()];diChains().forEach(function(chain,i){
+  var src=ac.createBufferSource(),g=ac.createGain(),t1=t+(i?0.004+Math.random()*0.008:0);src.buffer=DIMUTE[(DIRR++)%DIMUTE.length];
+  g.gain.value=g0*DIG*1.2;src.connect(g);g.connect(chain.in);src.start(t1);voices.push({src:src,g:g});});}
+function vfinish(src,g,base,t,o,gn){
+  var pr=src.playbackRate;if(o.auto)o.auto(pr,t,base);else pr.setValueAtTime(base,t);
+  if(o.vib){var l=ac.createOscillator(),lg=ac.createGain();l.frequency.value=5.5;lg.gain.value=0.02*base;l.connect(lg);lg.connect(pr);l.start(t+Math.min(0.12,o.dur*0.3));l.stop(t+o.dur+0.4);}
+  if(o.stac){g.gain.setValueAtTime(g.gain.value||gn,t+o.dur*0.45);g.gain.linearRampToValueAtTime(0.0001,t+o.dur*0.45+0.03);}
+  src.start(t);voices.push({src:src,g:g});}
 function voice(midi,t,o){
-  var T=TONEMAP[S.tone]||TONEMAP.drive,inst=o.harm?'harm':(o.pm?T.pm:T.main),smp=(S.tone!=='synth'&&inst)?sbGet(inst,midi):null;
-  var src=ac.createBufferSource(),g=ac.createGain(),base=1;
-  if(smp){src.buffer=smp.buf;base=smp.rate;var gn=o.gain*(SBG[inst]||0.8),node=src;
+  if(!o.harm&&S.tone!=='synth'&&diOn()&&diVoice(midi,t,o))return;
+  var T=TONEMAP[S.tone]||TONEMAP.drive,inst=o.harm?'harm':(o.pm?T.pm:T.main),smp=(S.tone!=='synth'&&inst&&inst!=='di')?sbGet(inst,midi):null;
+  var src=ac.createBufferSource(),g=ac.createGain(),base=1,gn=o.gain;
+  if(smp){src.buffer=smp.buf;base=smp.rate;gn=o.gain*(SBG[inst]||0.8);var node=src;
     if(o.pm&&T.pmf){var lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=T.pmf;lp.Q.value=0.7;src.connect(lp);node=lp;}
     node.connect(g);g.connect(sbus);g.gain.setValueAtTime(gn,t);
     if(o.pm&&T.pmdec)g.gain.setTargetAtTime(0.0001,t+0.05,T.pmdec);}
   else{src.buffer=ks(midi,o.pm);g.gain.value=o.gain;src.connect(g);g.connect(input);}
-  var pr=src.playbackRate;if(o.auto)o.auto(pr,t,base);else pr.setValueAtTime(base,t);
-  if(o.vib){var l=ac.createOscillator(),lg=ac.createGain();l.frequency.value=5.5;lg.gain.value=0.02*base;l.connect(lg);lg.connect(pr);l.start(t+Math.min(0.12,o.dur*0.3));l.stop(t+o.dur+0.4);}
-  if(o.stac){g.gain.setValueAtTime(g.gain.value||o.gain,t+o.dur*0.45);g.gain.linearRampToValueAtTime(0.0001,t+o.dur*0.45+0.03);}
-  src.start(t);voices.push({src:src,g:g});}
+  vfinish(src,g,base,t,o,gn);}
 function autoPitch(e,n,midi,nextN,pr,t0,d,br){
   var B=br||1,sv=function(v,t){pr.setValueAtTime(v*B,t);},lr=function(v,t){pr.linearRampToValueAtTime(v*B,t);};
   var sem=e.bend||2;sv(1,t0);

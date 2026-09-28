@@ -2,7 +2,7 @@
 /* ---------- ear trainer ---------- */
 var cleanBus=null;
 function cbus(){if(!cleanBus){cleanBus=ac.createGain();cleanBus.gain.value=0.9;cleanBus.connect(FX.hp);}return cleanBus;}
-function tone(midi,t,dur,g){sbLoad('clean');var sm=sbGet('clean',midi);if(sm){var s2=ac.createBufferSource();s2.buffer=sm.buf;s2.playbackRate.value=sm.rate;var g2=ac.createGain();g2.gain.setValueAtTime((g||0.7)*1.1,t);g2.gain.setTargetAtTime(0,t+(dur||1.2),0.08);s2.connect(g2);g2.connect(sbus);s2.start(t);s2.stop(t+(dur||1.2)+0.6);return;}var src=ac.createBufferSource();src.buffer=ks(midi,false);var gn=ac.createGain();gn.gain.setValueAtTime(g||0.7,t);gn.gain.setTargetAtTime(0,t+(dur||1.2),0.08);src.connect(gn);gn.connect(cbus());src.start(t);src.stop(t+(dur||1.2)+0.6);}
+function tone(midi,t,dur,g){diLoad();var sm=AMP&&DIREADY?diGet(midi,'mf'):null;if(sm){var s2=ac.createBufferSource();s2.buffer=sm.buf;s2.playbackRate.value=sm.rate;var g2=ac.createGain();g2.gain.setValueAtTime((g||0.7)*1.1,t);g2.gain.setTargetAtTime(0,t+(dur||1.2),0.08);s2.connect(g2);g2.connect(AMP.c.in);s2.start(t);s2.stop(t+(dur||1.2)+0.6);return;}var src=ac.createBufferSource();src.buffer=ks(midi,false);var gn=ac.createGain();gn.gain.setValueAtTime(g||0.7,t);gn.gain.setTargetAtTime(0,t+(dur||1.2),0.08);src.connect(gn);gn.connect(cbus());src.start(t);src.stop(t+(dur||1.2)+0.6);}
 var EARN={int:'فاصله‌ها',chord:'کیفیت آکورد',deg:'درجه در گام',mode:'تشخیص مُد',prog:'پیشرفت آکورد'};
 var INTN=['هم‌صدا','دوم کوچک','دوم بزرگ','سوم کوچک','سوم بزرگ','چهارم درست','تریتون','پنجم درست','ششم کوچک','ششم بزرگ','هفتم کوچک','هفتم بزرگ','اکتاو'];
 var EAR={d:'int',q:null,n:0,c:0,streak:0,recent:[]};

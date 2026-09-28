@@ -20,6 +20,7 @@ function initAudio(){
   var comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;
   FX={hp:hp,mid:mid,pres:pres,cab:cab,cab2:cab2,comp:comp};
   sbus=ac.createGain();sbus.gain.value=1;sbus.connect(comp);
+  ampBuild(comp);
   input.connect(cleanIn);input.connect(driveIn);
   driveIn.connect(pre);pre.connect(sh);sh.connect(post);post.connect(hp);
   cleanIn.connect(hp);
@@ -28,7 +29,7 @@ function initAudio(){
 }
 var FX=null;
 function normT(x){return ['clean','drive','acoustic','od','synth'].indexOf(x)>=0?x:'drive';}
-function setTone(){if(!ac)return;sbPrime();var d=S.tone==='drive'||S.tone==='od',a=S.tone==='acoustic';driveIn.gain.value=d?1:0;cleanIn.gain.value=d?0:(a?1:0.9);
+function setTone(){if(!ac)return;sbPrime();ampTone();var d=S.tone==='drive'||S.tone==='od',a=S.tone==='acoustic';driveIn.gain.value=d?1:0;cleanIn.gain.value=d?0:(a?1:0.9);
   if(FX){FX.mid.gain.value=a?1:-5;FX.pres.gain.value=a?5:3;FX.cab.frequency.value=a?10000:4800;FX.cab2.frequency.value=a?12000:6500;FX.hp.frequency.value=a?90:75;}}
 function ks(midi,pm){
   var key=midi+(pm?'p':'o');if(cache[key])return cache[key];
@@ -58,6 +59,7 @@ function audition(st){whenReady(function(){var t=ac.currentTime+0.02;choke(t);so
 function rate(semi){return Math.pow(2,semi/12);}
 var noiseBuf=null;
 function deadHit(t,g0){
+  if(diOn()&&DIMUTE.length){diDead(t,g0);return;}
   if(!noiseBuf){var sr=ac.sampleRate,len=Math.floor(sr*0.07);noiseBuf=ac.createBuffer(1,len,sr);var d=noiseBuf.getChannelData(0);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);}
   var src=ac.createBufferSource();src.buffer=noiseBuf;var bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1100;bp.Q.value=1.1;
   var g=ac.createGain();g.gain.value=g0;src.connect(bp);bp.connect(g);g.connect(input);src.start(t);voices.push({src:src,g:g});}
