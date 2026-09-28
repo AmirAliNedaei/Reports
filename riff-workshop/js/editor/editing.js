@@ -1,12 +1,15 @@
 /* ویرایش: undo/redo، کلیپ‌بورد، ابزار دیرش و تکنیک‌ها، کپی تب */
 /* ---------- UI glue ---------- */
 function renderModes(){
-  var box=$('modes');box.innerHTML='';
-  ORDER.forEach(function(k){var b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed',k===S.mode);
-    b.innerHTML='<span class="ltr">'+SHORT[k]+'</span>'+(k==='aeo'?'<small>(مینور طبیعی)</small>':'');
-    b.onclick=function(){setMode(k);};box.appendChild(b);});
-  var m=MODES[S.mode];$('mname').textContent=MN();if($('keypilltxt'))$('keypilltxt').textContent=MN();if(typeof renderBank==='function'&&$('style')){renderBank();renderPatterns();renderChords();if(typeof spRender==='function'&&SPT){spRender();impRender();earRender();if(typeof guideRender==='function'&&typeof MG!=='undefined'){guideRender();bandRender();}if(FQ&&!FQ.on)fqPaint();}}$('mmood').textContent=m.mood;
-  $('mnotes').textContent=spell(m.iv).join(' ')+'   |   '+dlab(m.iv).join(' ');
+  var box=$('modes');box.innerHTML='';var cat='',row=null;
+  SCALES.forEach(function(s,i){if(s[0]!==cat){cat=s[0];box.appendChild(EL('div','mfam',cat));row=EL('div','row');box.appendChild(row);}
+    var k=s[4],on=k?(k===S.mode&&!S.lens):(S.lens&&S.lens.i===i);
+    var b=document.createElement('button');b.className='chip'+(k?'':' lens');b.setAttribute('aria-pressed',!!on);
+    b.innerHTML='<span class="ltr">'+(k?SHORT[k]:s[1])+'</span>'+(k==='aeo'?'<small>(مینور طبیعی)</small>':'');
+    if(!k)b.title='لایه روی '+MODES[s[5]].n;
+    b.onclick=function(){if(k)setMode(k);else{SCS.i=i;SCS.root=S.key;sclUse();}};row.appendChild(b);});
+  var m=MODES[S.mode];$('mname').textContent=MN();if($('keypilltxt'))$('keypilltxt').textContent=S.lens?RN()+' '+SCALES[S.lens.i][1]:MN();if(typeof renderBank==='function'&&$('style')){renderBank();renderPatterns();renderChords();if(typeof spRender==='function'&&SPT){spRender();impRender();earRender();if(typeof guideRender==='function'&&typeof MG!=='undefined'){guideRender();bandRender();}if(FQ&&!FQ.on)fqPaint();}}$('mmood').textContent=m.mood;
+  $('mnotes').textContent=spell(m.iv).join(' ')+'   |   '+dlab(m.iv).join(' ')+(S.lens?'   |   '+SCALES[S.lens.i][1]:'');
 }
 var UNDO=[],REDO=[],lastJ=null,undoing=false,CLIP=null,typeBuf=null,typeT=0;
 function changed(onlyCursor){

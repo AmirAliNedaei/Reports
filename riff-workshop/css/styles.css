@@ -416,3 +416,9 @@ html[lang="en"] :is(h1,h2,h3,p,.btn,.chip,.tb,.feel,.qprompt,.litem,.hint,.insig
 .lib .empty{color:var(--muted);font-size:14px;border-top:0}
 kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
 @media (prefers-reduced-motion:reduce){.dot,.bar i,.toast{transition:none}}
+/* mode picker grouped by scale family; layer scales (pentatonic, blues …) get a dashed border */
+#modes{display:block}
+#modes .mfam{font-size:11px;letter-spacing:.06em;color:var(--lantern);font-weight:700;margin:10px 0 4px}
+#modes .mfam:first-child{margin-top:0}
+#modes .row{gap:6px}
+.chip.lens{border-style:dashed}

@@ -36,8 +36,8 @@
   $('sclsearch').oninput=function(){SCS.q=this.value.trim();sclRender();};
   $('sclplay').onclick=function(){var iv=SCL[SCS.i][2],base=40+((SCS.root-4)%12+12)%12,seq=iv.concat([12]);seq=seq.concat(seq.slice(0,-1).reverse());
     whenReady(function(){var t=ac.currentTime+0.05;choke(t);seq.forEach(function(x,i){playMidis([base+12+x],t+i*0.22,false);});});};
-  $('scluse').onclick=function(){var s=SCL[SCS.i];if(!s[4])return;setKey(SCS.root,false);setMode(s[4]);toast('مُد اصلی برنامه: '+MN());};
-  sclRender();
+  $('scluse').onclick=sclUse;
+  sclSync();sclRender();
   // improv
   buildNeckInto($('impneck'),function(e){audition({t:'n',s:+e.currentTarget.dataset.s,f:+e.currentTarget.dataset.f,pc:false,pm:false});});
   $('impplay').onclick=function(){if(LP.on&&LP.o.tag==='imp'){lpStop();return;}impStart();};

@@ -2,7 +2,7 @@
 
 function $(id){return document.getElementById(id);}
 
-var S={key:1,mode:'aeo',events:[],cur:0,cs:5,sel:null,ts:{n:4,d:4},speed:100,metro:false,countin:false,nd:{d:'8',dot:false,tri:false},chord:false,bpm:140,tone:'drive',loop:true,snap:false,deg:false,listen:false};
+var S={key:1,mode:'aeo',events:[],cur:0,cs:5,sel:null,ts:{n:4,d:4},speed:100,metro:false,countin:false,nd:{d:'8',dot:false,tri:false},chord:false,bpm:140,tone:'drive',loop:true,snap:false,deg:false,listen:false,lens:null};
 function emptySteps(n){var a=[];for(var i=0;i<n;i++)a.push(null);return a;}
 
 function spell(ivs){return spellAny(S.key,ivs).notes;}

@@ -4,6 +4,7 @@ var KEYLAB=['C','C# / Db','D','D# / Eb','E','F','F# / Gb','G','G# / Ab','A','A# 
 function renderKeys(){var box=$('keys');if(!box)return;box.innerHTML='';
   KEYLAB.forEach(function(l,k){var b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed',k===S.key);b.innerHTML='<span class="ltr">'+l+'</span>';
     b.onclick=function(){setKey(k,false);};box.appendChild(b);});}
+function lensIv(){var s=S.lens&&SCALES[S.lens.i];return s?s[2]:null;}
 var PREFKEY='riff-workshop-prefs';
 var PREF={onchg:'clear'};
 try{var _p=JSON.parse(localStorage.getItem(PREFKEY)||'{}');if(_p&&['clear','move','keep'].indexOf(_p.onchg)>=0)PREF.onchg=_p.onchg;}catch(e){}
@@ -49,7 +50,7 @@ function setKey(k,silent){
 function setMode(k){
   if(k===S.mode)return;
   var r=applyChange('mode',0);
-  S.mode=k;freshView();
+  S.mode=k;S.lens=null;freshView();
   if(r==='clear')toastUndo(MN()+'؛ صفحه تازه شد');
 }
 function doClean(o){
@@ -57,7 +58,7 @@ function doClean(o){
   if(o.riff){S.events=[];S.cur=0;curId=null;$('rname').value='';}
   if(o.view){activePat=null;S.cur=0;S.chord=false;}
   if(o.rz){rzSeq=[];rzCand=null;$('rznotes').value='';$('rztab').value='';$('rzout').innerHTML='';renderSeq();refreshMini();}
-  if(o.set){S.key=1;S.mode='aeo';S.bpm=140;S.tone='drive';setTone();S.nd={d:'8',dot:false,tri:false};S.chord=false;S.loop=true;$('loop').setAttribute('aria-pressed','true');
+  if(o.set){S.key=1;S.mode='aeo';S.lens=null;S.bpm=140;S.tone='drive';setTone();S.nd={d:'8',dot:false,tri:false};S.chord=false;S.loop=true;$('loop').setAttribute('aria-pressed','true');
     ['snap','deg','listen'].forEach(function(id){$(id).checked=false;});S.snap=S.deg=S.listen=false;
     patHigh=true;$('patreg').value='1';$('rzhome').value='-1';syncControls();}
   renderLib();freshView();

@@ -7,7 +7,7 @@ function cmdList(){var L=[];
   L.push({t:'شروع راند دسته‌شناسی',k:'quiz',f:function(){goSec('fq');if(!FQ.on)$('fqgo').click();}});
   L.push({t:'سؤال جدید گوش',k:'ear',f:function(){goSec('ear');earNew();}});
   KEYLAB.forEach(function(l,k){L.push({t:'کلید: '+l,k:'key '+l,f:function(){setKey(k,false);}});});
-  ORDER.forEach(function(m){L.push({t:'مُد: '+MODES[m].n,k:'mode '+m,f:function(){setMode(m);}});});
+  MODEKEYS.forEach(function(m){L.push({t:'مُد: '+MODES[m].n,k:'mode '+m,f:function(){setMode(m);}});});
   Object.keys(LESSONS).forEach(function(k){L.push({t:'درس: '+LESSONS[k].name,k:'lesson',f:function(){goSec('riff');loadPreset(k);}});});
   CT.forEach(function(t){L.push({t:'آکورد در کاوشگر: '+PCN[S.key]+t.sfx,k:'chord '+t.sfx,f:function(){goSec('chords');$('cxroot').value=S.key;$('cxtype').value=t.id;renderExplorer();reveal($('cxout'));}});});
   SCL.forEach(function(s,i){L.push({t:'اسکیل: '+s[1],k:'scale '+s[0],f:function(){goSec('scl');SCS.i=i;sclRender();}});});
