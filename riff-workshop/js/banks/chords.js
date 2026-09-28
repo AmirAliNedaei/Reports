@@ -226,7 +226,8 @@ function chordCard(rootPc,t,o){
     a4.onclick=function(){if(sel){sel=null;paint();a4.textContent='نمایش صدابندی انتخاب‌شده';}else{sel=VV[sv]?VV[sv].notes:null;paint();a4.textContent='فقط نت‌ها (بدون صدابندی)';}};
     setTimeout(function(){c.scrollIntoView({behavior:'smooth',block:'nearest'});},30);
   }
-  var ir=EL('div','idearow');ir.appendChild(EL('span','kick','۳ ایده'));['آرپژ لت‌رینگ','چاگ و ضربه‌ی آکورد','لید روی نت‌های آکورد'].forEach(function(nm,i){var bi=EL('button','tb',fa(i+1)+'. '+nm);bi.onclick=function(){if(!V.length)return;var L2=chordIdeas(V[vi].notes,rootPc);ideaLoad(L2[i].ev,rn+t.sfx+' — '+nm);};ir.appendChild(bi);});c.appendChild(ir);
+  var cpcs=t.tones.map(function(tn){return (rootPc+tn[0])%12;}).filter(function(x,i,a){return a.indexOf(x)===i;});
+  c.appendChild(chordIdeaRow(function(){return V.length?V[vi].notes:null;},rootPc,cpcs,rn+t.sfx));
   b2.onclick=function(){if(X)closeX();else openX();};
   hd.querySelector('.rn').onclick=b2.onclick;
   draw();return c;
