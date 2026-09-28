@@ -18,7 +18,7 @@ function initAudio(){
   var cab2=ac.createBiquadFilter();cab2.type='lowpass';cab2.frequency.value=6500;cab2.Q.value=0.5;
   var master=ac.createGain();master.gain.value=0.55;
   var comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;
-  FX={hp:hp,mid:mid,pres:pres,cab:cab,cab2:cab2,comp:comp};
+  FX={hp:hp,mid:mid,pres:pres,cab:cab,cab2:cab2,comp:comp,master:master};
   sbus=ac.createGain();sbus.gain.value=1;sbus.connect(comp);
   input.connect(cleanIn);input.connect(driveIn);
   driveIn.connect(pre);pre.connect(sh);sh.connect(post);post.connect(hp);

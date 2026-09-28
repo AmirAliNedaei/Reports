@@ -39,7 +39,7 @@ function schedule(){
       else{var endT=nextT;setTimeout(stop,Math.max(0,(endT-ac.currentTime)*1000));clearInterval(timer);timer=null;return;}
     }
     var e=E[evI],tk=ticks(e),d=secsOf(tk),prev=evI>0?E[evI-1]:null,next=E[evI+1]||(S.loop?E[S.sel?loopA:0]:null);
-    playEvent(e,nextT,d,prev,next);
+    if(!REC.mute)playEvent(e,nextT,d,prev,next);
     if(S.metro){var BT=beatT(),b=Math.ceil(curTick/BT-1e-9)*BT,GS=groupsT();while(b<curTick+tk-1e-9){var rb=b%barT();click(nextT+secsOf(b-curTick),Math.abs(rb)<1e-6||GS.indexOf(rb)>0&&GS.indexOf(rb)<GS.length-1);b+=BT;}}
     if(S.drums&&S.drums!=='none'){var DP=drumPattern(S.ts,S.drums),BTk=barT(),b0=Math.floor(curTick/BTk)*BTk;for(var bb=b0;bb<curTick+tk;bb+=BTk)DP.forEach(function(h){var at=bb+h.t;if(at>=curTick-1e-6&&at<curTick+tk-1e-6)drumHit(h.k,nextT+secsOf(at-curTick),h.v);});}
     visQ.push({i:evI,t:nextT});nextT+=d;curTick+=tk;evI++;
