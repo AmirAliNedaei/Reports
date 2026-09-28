@@ -458,3 +458,5 @@ kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-botto
 /* typed tempo */
 .bpmbig .bpmin{width:3.6em;font:inherit;font-size:34px;font-weight:800;text-align:center;background:transparent;color:inherit;border:1px solid var(--line);border-radius:8px;padding:0 4px;font-variant-numeric:tabular-nums;direction:ltr}
 .ctl input[type=range]+.numin{width:4.2em;margin-inline-start:6px}
+.ideamode{gap:6px;align-items:center;margin:8px 0 4px}
+.ideamode .kick{margin:0 0 0 4px}

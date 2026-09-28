@@ -6,8 +6,8 @@ function renderKeys(){var box=$('keys');if(!box)return;box.innerHTML='';
     b.onclick=function(){setKey(k,false);};box.appendChild(b);});}
 function lensIv(){var s=S.lens&&SCALES[S.lens.i];return s?s[2]:null;}
 var PREFKEY='riff-workshop-prefs';
-var PREF={onchg:'clear'};
-try{var _p=JSON.parse(localStorage.getItem(PREFKEY)||'{}');if(_p&&['clear','move','keep'].indexOf(_p.onchg)>=0)PREF.onchg=_p.onchg;}catch(e){}
+var PREF={onchg:'clear',idea:'append'};
+try{var _p=JSON.parse(localStorage.getItem(PREFKEY)||'{}');if(_p&&['clear','move','keep'].indexOf(_p.onchg)>=0)PREF.onchg=_p.onchg;if(_p&&(_p.idea==='append'||_p.idea==='replace'))PREF.idea=_p.idea;}catch(e){}
 function savePref(){try{localStorage.setItem(PREFKEY,JSON.stringify(PREF));}catch(e){}}
 function hasRiff(){return S.events.some(function(e){return !e.rest&&e.notes.length;});}
 var lastSnap=null;
