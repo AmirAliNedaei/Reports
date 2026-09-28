@@ -1,6 +1,8 @@
 /* ایده‌های ریف و سولو برای آکوردها و الگوها */
 /* ---------- idea helpers ---------- */
+// ایده‌ها یا جای ریف رو می‌گیرن، یا (پیش‌فرض) به آخر ریف اضافه می‌شن تا بشه یک پیشرفت کامل ساخت
 function ideaLoad(evs,name,opt){opt=opt||{};if(playing)stop();lpStop();
+  if(PREF.idea==='append'){if(!hasRiff()){S.events=[];S.ts={n:4,d:4};if(opt.drums)S.drums=opt.drums;if(!$('rname').value)$('rname').value=name;syncControls();}ideaAppend(evs,name);return;}
   S.events=fitBar(evs.map(fixEv));S.ts={n:4,d:4};S.cur=0;S.sel=null;if(opt.drums)S.drums=opt.drums;if(opt.bpm)S.bpm=opt.bpm;curId=null;$('rname').value=name;
   syncControls();changed();renderLib();goPage('editor');setTimeout(function(){start(true);},80);}
 // نام و توضیح ۸ ایده‌ی هر آکورد (۴ ریف، ۴ سولو)؛ en/de ترجمه‌ی انگلیسی
@@ -15,6 +17,15 @@ var CHIDEAS=[
  {k:'solo',n:'تپینگ آرپژ',en:'tapped arpeggio',dr:'metal',d:'سه نت آکورد روی یک سیم: نت بالا با تپ، دو نت دیگه با پول و همر؛ نیمه‌ی دوم یک وارونگی بالاتر.',de:'Three chord tones on one string: the top one tapped, the others pulled and hammered; the second half one inversion higher.'}];
 CHIDEAS.forEach(function(x,i){trAdd(x.n,x.en);trAdd(fa(i+1)+'. '+x.n,(i+1)+'. '+x.en);trAdd(x.d,x.de);});
 // notes: صدابندی آکورد، rootPc: ریشه، pcs: همه‌ی نت‌های آکورد (pitch class)
+function ideaAppend(evs,name){takeSnap();
+  var cur=fitBar(S.events.slice()),add=fitBar(evs.map(fixEv)),at=cur.length;S.events=cur.concat(add);S.cur=at;S.sel=null;
+  var tk=0;S.events.forEach(function(e){tk+=ticks(e);});var bars=Math.round(tk/barT()*10)/10;
+  changed();auditionAdded(add);toastUndo('«'+name+'» به آخر ریف اضافه شد؛ ریف حالا '+fa(bars)+' میزانه');}
+// فقط بخش اضافه‌شده رو یک بار پخش می‌کنه
+function auditionAdded(add){whenReady(function(){var t=ac.currentTime+0.05;choke(t);add.forEach(function(e,i){var d=secsOf(ticks(e));playEvent(e,t,d,add[i-1]||null,add[i+1]||null);t+=d;});});}
+// انتخاب «اضافه به آخر ریف» یا «جایگزین ریف» برای همه‌ی دکمه‌های ایده
+function ideaModeRender(){['ideamode1','ideamode2'].forEach(function(id){var box=$(id);if(!box)return;box.innerHTML='';box.appendChild(EL('span','kick','با زدن ایده‌ها:'));
+  [['append','به آخر ریف اضافه بشن'],['replace','جای ریف رو بگیرن']].forEach(function(x){var b=EL('button','chip',x[1]);b.setAttribute('aria-pressed',PREF.idea===x[0]);b.onclick=function(){PREF.idea=x[0];savePref();ideaModeRender();};box.appendChild(b);});});}
 function chordIdeas(notes,rootPc,pcs){
   var cp=function(a){return a.map(function(x){return {s:x.s,f:x.f};});};
   var ns=notes.slice().sort(function(a,b){return b.s-a.s;}),low=ns[0],hi=ns.slice(-2);
