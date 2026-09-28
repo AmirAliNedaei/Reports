@@ -37,7 +37,7 @@ function typeFret(dg){
 function delNote(){var ev=S.events[S.cur];if(!ev)return;var had=ev.notes.length;ev.notes=ev.notes.filter(function(n){return n.s!==S.cs;});
   if(ev.notes.length===had){toast('روی این سیم نتی نیست؛ برای حذف کل خانه Shift+Delete');return;}if(!ev.notes.length){ev.rest=true;ev.t={};}changed();}
 function stepDur(dir){var e=curEv(),c=(e||S.nd).d,k=DORDER.indexOf(c)+dir;if(k<0||k>=DORDER.length)return;setDur(DORDER[k]);}
-function parseTs(v){var pr=String(v||'4/4').split(':'),m=pr[0].split('/');var n=+m[0],d=+m[1];if(!(n>0&&(d===4||d===8)))return {n:4,d:4};var o={n:n,d:d};if(pr[1]){var g=pr[1].split('+').map(Number);if(g.reduce(function(a,b){return a+b;},0)===n)o.g=g;}return o;}
+function parseTs(v){var pr=String(v||'4/4').split(':'),m=pr[0].split('/');var n=+m[0],d=+m[1];if(!(n>0&&(d===4||d===8||d===16)))return {n:4,d:4};var o={n:n,d:d};if(pr[1]){var g=pr[1].split('+').map(Number);if(g.reduce(function(a,b){return a+b;},0)===n)o.g=g;}return o;}
 var tt;function toast(msg){var t=$('toast');t.classList.remove('act');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show');},1800);}
 function curEv(){return S.events[S.cur]||null;}
 function needEv(){var e=curEv();if(!e||e.rest||!e.notes.length){toast('اول یک نت در این خانه بنویس');return null;}return e;}

@@ -422,3 +422,9 @@ kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-botto
 #modes .mfam:first-child{margin-top:0}
 #modes .row{gap:6px}
 .chip.lens{border-style:dashed}
+/* live counter under the odd-meter grid */
+.oddlive{display:flex;align-items:baseline;gap:12px;margin:8px 0 2px;font-variant-numeric:tabular-nums}
+.oddlive b{font-size:34px;line-height:1;min-width:1.2em;text-align:center;color:var(--muted)}
+.oddlive b.on{color:var(--lantern)}
+.oddlive span{font-size:20px;font-weight:700}
+.oddlive small{color:var(--muted)}

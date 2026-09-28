@@ -35,6 +35,8 @@ var I18N=(function(){
   function setDir(){var h=document.documentElement;h.setAttribute('lang',LANG);h.setAttribute('dir',LANG==='en'?'ltr':'rtl');document.title=LANG==='en'?'Riff Forge · C# Standard':'کارگاه ریف C# Standard';}
   return {tr:tr,apply:apply,watch:watch,setDir:setDir};
 })();
+// ترجمه‌ی متن‌هایی که در فایل‌های داده تعریف می‌شن (کلید مثل دیکشنری: اعداد لاتین، فاصله‌ی یکسان)
+function trAdd(fa,en){if(!fa||!en)return;I18N_DICT[fa.replace(/[۰-۹]/g,function(c){return '۰۱۲۳۴۵۶۷۸۹'.indexOf(c);}).replace(/\s+/g,' ').trim()]=en;}
 function setLang(l){LANG=l==='en'?'en':'fa';try{localStorage.setItem('riff-workshop-lang',LANG);}catch(e){}
   I18N.setDir();if($('setlang'))$('setlang').value=LANG;if($('langbtn')){$('langbtn').textContent=LANG==='en'?'فا':'EN';$('langbtn').title=LANG==='en'?'فارسی':'English';}
   renderKeys();renderModes();changed(true);renderAnalysis();renderLib();if(curPage)goPage(curPage);I18N.apply(document.body);}
