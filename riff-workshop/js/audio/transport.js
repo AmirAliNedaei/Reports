@@ -15,7 +15,7 @@ function drumHit(kind,t,v){v=v||1;var out=dbus();
   else{var h=ac.createBufferSource();h.buffer=drumNoise();var hp2=ac.createBiquadFilter();hp2.type='highpass';hp2.frequency.value=kind==='c'?4000:7500;var g4=ac.createGain();var dur=kind==='c'?1.1:kind==='o'?0.22:0.045;g4.gain.setValueAtTime((kind==='c'?0.35:0.22)*v,t);g4.gain.exponentialRampToValueAtTime(0.001,t+dur);h.connect(hp2);hp2.connect(g4);g4.connect(out);h.start(t);h.stop(t+dur+0.02);}}
 /* pattern for one bar: [{t,k,v}] from a meter {n,d,g} and a style */
 function drumPattern(ts,style){
-  var u=ts.d===8?48:96,g=ts.g||(ts.d===8?(ts.n%3===0?Array(ts.n/3).fill(3):[ts.n]):Array(ts.n).fill(1)),bar=ts.n*u,starts=[],t=0,P=[];
+  var u=384/ts.d,g=ts.g||(ts.d>=8?(ts.n%3===0?Array(ts.n/3).fill(3):[ts.n]):Array(ts.n).fill(1)),bar=ts.n*u,starts=[],t=0,P=[];
   g.forEach(function(x){starts.push(t);t+=x*u;});
   if(ts.d===4&&!ts.g){starts=[];for(var q=0;q<ts.n;q++)starts.push(q*96);}
   var back=starts.filter(function(x,i){return i%2===1;}),down=starts.filter(function(x,i){return i%2===0;});
